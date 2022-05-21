@@ -11,6 +11,8 @@ public enum EnumUserException {
     UD_004f("The program couldn't close connection!"),
     UD_005("User was not deleted!"),
     UD_005f("The program couldn't close connection!"),
+    UD_006("Usernames cannot be read!"),
+    UD_006f("The program couldn't close connection!"),
 
     USC_01("The app couldn't to check the login in database!"),
 
