@@ -104,7 +104,7 @@ public class TicketDao implements TicketDatabaseAction<Ticket, Integer> {
         try {
             Connection connection = getConnection();
             PreparedStatement prs = connection.prepareStatement("SELECT * FROM tickets WHERE userName=?");
-            prs.setString(1, USER_ONLINE.getLogin());
+            prs.setString(1, user.getLogin());
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
                 Ticket ticket = new Ticket();
@@ -177,7 +177,6 @@ public class TicketDao implements TicketDatabaseAction<Ticket, Integer> {
         try {
             Connection connection = getConnection();
             PreparedStatement prs = connection.prepareStatement(
-                    //UPDATE tickets SET userName=? WHERE ticketID=?
                     UPDATE_THE_USERNAME_FIELD_INTO_THE_TICKET.getScript());
             prs.setString(1, null);
             prs.setInt(2, ticketID);

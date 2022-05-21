@@ -41,13 +41,15 @@ public class ManagerMenu extends UserMenu {
                 break;
             case 4:
                 new ManagerService().buyATicketForUser();
-
+                showManagerMenu();
                 break;
             case 5:
-
+                new ManagerService().showTheUserTickets();
+                showManagerMenu();
                 break;
             case 6:
-
+                new ManagerService().cancelTheTicketOfTheUser();
+                showManagerMenu();
                 break;
             case 0:
                 System.exit(0);
@@ -59,7 +61,7 @@ public class ManagerMenu extends UserMenu {
         boolean correctness = false;
         while (correctness == false) {
             valueString = scanString();
-            Pattern pattern = Pattern.compile("[0-5]{1}");
+            Pattern pattern = Pattern.compile("[0-6]{1}");
             Matcher matcher = pattern.matcher(valueString);
             if (matcher.matches() == false) {
                 System.out.println("Неверный запрос, повторите попытку.");
