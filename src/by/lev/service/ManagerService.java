@@ -12,6 +12,7 @@ import by.lev.ticket.Ticket;
 import by.lev.ticket.TicketDao;
 import by.lev.user.User;
 import by.lev.user.UserDao;
+import by.lev.user.UserNameComparator;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -56,7 +57,9 @@ public class ManagerService extends UserService {
         } catch (UserException e) {
             throw new RuntimeException(e);
         }
+        usernames.sort(new UserNameComparator());
         usernames.forEach(System.out::println);
+        System.out.println();
     }
 
     public void buyATicketForUser() {
@@ -111,7 +114,7 @@ public class ManagerService extends UserService {
         }
     }
 
-    public void cancelTheTicketOfTheUser() {
+    public void cancelTheTicket() {
         System.out.println("введите логин пользователя...");
         String login = scanString();
         checkLoginInBase(login);

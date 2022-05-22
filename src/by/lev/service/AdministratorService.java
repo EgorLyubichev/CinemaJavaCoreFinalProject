@@ -1,6 +1,8 @@
 package by.lev.service;
 
 import by.lev.controller.AdministratorMenu;
+import by.lev.controller.Registration;
+import by.lev.exceptions.UserException;
 import by.lev.service.inputChecks.MovieInputCheck;
 import by.lev.exceptions.MovieException;
 import by.lev.exceptions.TicketException;
@@ -8,6 +10,8 @@ import by.lev.movie.Movie;
 import by.lev.movie.MovieDao;
 import by.lev.ticket.Ticket;
 import by.lev.ticket.TicketDao;
+import by.lev.user.User;
+import by.lev.user.UserDao;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -18,7 +22,7 @@ import static by.lev.service.ServiceFunction.*;
 public class AdministratorService extends ManagerService {
     Movie movie = new Movie();
 
-    public void addNewMovieAccount(){
+    public void addNewMovieAccount() {
         try {
             createNewMovie();
         } catch (MovieException e) {
@@ -28,6 +32,7 @@ public class AdministratorService extends ManagerService {
         System.out.println("уч.запись для фильма '" + movie.getTitle().toUpperCase() + "' на дату " + movie.getDateTime().toString()
                 + " со списком билетов успешно добавлена");
     }
+
     public void createNewMovie() throws MovieException {
         Movie movieToLoad = new Movie();
 
@@ -60,11 +65,12 @@ public class AdministratorService extends ManagerService {
         md.create(movieToLoad);
         movie = md.read(movieToLoad.getTitle());
     }
+
     public void createMovieTickets() {
         Ticket ticket = new Ticket();
         System.out.println("Введите цену билета для данного сеанса...");
         int price = scanInt();
-        if(price < 0){
+        if (price < 0) {
             System.out.println("операция прервана: указана некорректная цена билета");
             new AdministratorMenu().showMovieOperations();
         }
@@ -81,7 +87,7 @@ public class AdministratorService extends ManagerService {
         }
     }
 
-    public void deleteMovieAccount(){
+    public void deleteMovieAccount() {
         System.out.println("Введите № уч.записи для удаления...");
         int movieID = scanInt();
         try {
@@ -89,11 +95,11 @@ public class AdministratorService extends ManagerService {
         } catch (MovieException e) {
             throw new RuntimeException(e);
         }
-        if (movie.getTitle() == null){
+        if (movie.getTitle() == null) {
             System.out.println("операция прервана: уч.записи с данным номером не найдено");
             new AdministratorMenu().showMovieOperations();
         }
-        try{
+        try {
             new TicketDao().delete(movie);
         } catch (TicketException e) {
             throw new RuntimeException(e);
@@ -103,6 +109,77 @@ public class AdministratorService extends ManagerService {
             System.out.println("уч.запись №" + movieID + " удалена");
         } catch (MovieException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void changePassword() {
+        System.out.println("введите логин пользователя для смены пароля...");
+        String login = scanString();
+        User user = new User();
+        try {
+            user = new UserDao().read(login);
+        } catch (UserException e) {
+            throw new RuntimeException(e);
+        }
+        if (user.getPassword() == null) {
+            System.out.println("операция прервана: такого пользователя нет в базе");
+        }
+        System.out.println("введите новый пароль...");
+        String newPassword = scanString();
+        while (new Registration().checkTheCorrectnessOfThePasswordInput(newPassword) == false) {
+            newPassword = scanString();
+        }
+        System.out.println("повторите пароль...");
+        String repeatPassword = scanString();
+        if (!newPassword.equals(repeatPassword)) {
+            System.out.println("введенные пароли не совпадают");
+            new AdministratorMenu().showUserOperations();
+        }
+        try {
+            new UserDao().update(login, newPassword);
+            System.out.println("пароль успешно обновлен");
+        } catch (UserException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteTheUser() {
+        System.out.println("введите логин пользователя для удаления...");
+        String login = scanString();
+        User user = new User();
+        try {
+            user = new UserDao().read(login);
+        } catch (UserException e) {
+            throw new RuntimeException(e);
+        }
+        if (user.getPassword() == null) {
+            System.out.println("операция прервана: пользователя с логином " + login + " в базе нет");
+           new AdministratorMenu().showUserMenu();
+        }
+        try {
+            new UserDao().delete(login);
+            System.out.println("пользователь " + login + " удален");
+        } catch (UserException e) {
+            throw new RuntimeException(e);
+        }
+        List<Integer> userTicketNumbers = new ArrayList<>();
+        try {
+             userTicketNumbers = new TicketDao().getTicketNumbersOfTheUser(user);
+        } catch (TicketException e) {
+            throw new RuntimeException(e);
+        }
+        String positiveResault = "данные пользователя " + login + " успешно удалены";
+        if (userTicketNumbers.isEmpty()){
+            System.out.println(positiveResault);
+        }else {
+            for (Integer value : userTicketNumbers) {
+                try {
+                    new TicketDao().update(value);
+                } catch (TicketException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            System.out.println(positiveResault);
         }
     }
 }

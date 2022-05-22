@@ -139,7 +139,7 @@ public class TicketDao implements TicketDatabaseAction<Ticket, Integer, String> 
             Connection connection = getConnection();
             PreparedStatement prs = connection.prepareStatement(
                     GET_TICKETS_ID_FROM_TICKETS_BY_THE_USERNAME_REQUEST.getScript());
-            prs.setString(1, USER_ONLINE.getLogin());
+            prs.setString(1, user.getLogin());
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
                 int ticketID = rs.getInt("ticketID");

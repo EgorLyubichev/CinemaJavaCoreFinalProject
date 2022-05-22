@@ -1,14 +1,13 @@
 package by.lev.controller;
 
 import by.lev.service.AdministratorService;
-import by.lev.service.ManagerService;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static by.lev.service.ServiceFunction.scanString;
 
-public class AdministratorMenu {
+public class AdministratorMenu extends ManagerMenu{
     public void showAdminMenu() {
         System.out.println("- - -|      CACTUS CINEMA      |- - -");
         System.out.println("- - -| СТРАНИЦА АДМИНИСТРАТОРА |- - -");
@@ -17,17 +16,17 @@ public class AdministratorMenu {
         System.out.println("<3> - операции с пользователями");
         System.out.println("<0> - выход из программы");
 
-        int choice = inputCorrectValueInTheAdministratorMenu();
+        int choice = inputCorrectValueFromZeroToThree();
 
         switch (choice) {
             case 1:
                 showMovieOperations();
                 break;
             case 2:
-                //операции с билетами
+                showTicketOperations();
                 break;
             case 3:
-                //операции с пользователями
+                showUserOperations();
                 break;
             case 0:
                 System.exit(0);
@@ -47,7 +46,7 @@ public class AdministratorMenu {
 
         System.out.println("<0> - назад");
 
-        int choice = inputCorrectValueInTheAdministratorMovieMenu();
+        int choice = inputCorrectValueFromZeroToSix();
 
         switch (choice) {
             case 1:
@@ -81,7 +80,74 @@ public class AdministratorMenu {
         }
     }
 
-    private int inputCorrectValueInTheAdministratorMenu() {
+    public void showTicketOperations() {
+        System.out.println("- - -|      CACTUS CINEMA      |- - -");
+        System.out.println("- - -| СТРАНИЦА АДМИНИСТРАТОРА |- - -");
+        System.out.println("- - -|   ОПЕРАЦИИ С БИЛЕТАМИ   |- - -");
+        System.out.println("<1> - купить билет для пользователя");
+        System.out.println("<2> - посмотреть билеты пользователя");
+        System.out.println("<3> - отменить билет для пользователя");
+
+        System.out.println("<0> - назад");
+
+        int choice = inputCorrectValueFromZeroToThree();
+
+        switch (choice) {
+            case 1:
+                new AdministratorService().buyATicketForUser();
+                System.out.println();
+                showTicketOperations();
+                break;
+            case 2:
+                new AdministratorService().showUserTickets();
+                System.out.println();
+                showTicketOperations();
+                break;
+            case 3:
+                new AdministratorService().cancelTheTicket();
+                showTicketOperations();
+                break;
+            case 0:
+                showAdminMenu();
+        }
+    }
+
+    public void showUserOperations() {
+        System.out.println("- - -|      CACTUS CINEMA      |- - -");
+        System.out.println("- - -| СТРАНИЦА АДМИНИСТРАТОРА |- - -");
+        System.out.println("- - -|ОПЕРАЦИИ С ПОЛЬЗОВАТЕЛЯМИ|- - -");
+        System.out.println("<1> - список пользователей");
+        System.out.println("<2> - изменить пароль для пользователя");
+        System.out.println("<3> - добавить нового пользователя");
+        System.out.println("<4> - удалить пользователя и все его данные");
+
+        System.out.println("<0> - назад");
+
+        int choice = inputCorrectValueFromZeroToFour();
+
+        switch (choice) {
+            case 1:
+                new AdministratorService().showUserList();
+                showUserOperations();
+                break;
+            case 2:
+                new AdministratorService().changePassword();
+                showUserOperations();
+                break;
+            case 3:
+                new Registration().createNewUser();
+                showUserOperations();
+                break;
+            case 4:
+                new AdministratorService().deleteTheUser();
+                showUserOperations();
+                break;
+            case 0:
+                showAdminMenu();
+        }
+    }
+
+    private int inputCorrectValueFromZeroToThree() {
         String valueString = null;
         boolean correctness = false;
         while (correctness == false) {
@@ -98,7 +164,24 @@ public class AdministratorMenu {
         return result;
     }
 
-    private int inputCorrectValueInTheAdministratorMovieMenu() {
+    private int inputCorrectValueFromZeroToFour() {
+        String valueString = null;
+        boolean correctness = false;
+        while (correctness == false) {
+            valueString = scanString();
+            Pattern pattern = Pattern.compile("[0-4]{1}");
+            Matcher matcher = pattern.matcher(valueString);
+            if (matcher.matches() == false) {
+                System.out.println("Неверный запрос, повторите попытку.");
+            } else {
+                correctness = true;
+            }
+        }
+        int result = Integer.parseInt(valueString);
+        return result;
+    }
+
+    private int inputCorrectValueFromZeroToSix() {
         String valueString = null;
         boolean correctness = false;
         while (correctness == false) {

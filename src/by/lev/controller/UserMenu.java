@@ -11,13 +11,14 @@ public class UserMenu {
     public void showUserMenu() {
         System.out.println("- - -|  CACTUS CINEMA  |- - -");
         System.out.println("- - -| ГЛАВНАЯ СТРАНИЦА|- - -");
-        System.out.println("<1> - Посмотреть предстоящие фильмы.");
-        System.out.println("<2> - Купить билет.");
-        System.out.println("<3> - Посмотреть купленные билеты.");
-        System.out.println("<4> - Отменить билет.");
-        System.out.println("<0> - Выход из программы.");
+        System.out.println("<1> - предстоящие фильмы");
+        System.out.println("<2> - купить билет");
+        System.out.println("<3> - купленные билеты");
+        System.out.println("<4> - отменить билет");
+        System.out.println("<5> - сменить пароль");
+        System.out.println("<0> - выход из программы");
 
-        int choice = inputCorrectValue();
+        int choice = inputCorrectValueFromZeroToFive();
 
         switch (choice) {
             case 1:
@@ -36,17 +37,21 @@ public class UserMenu {
                 new UserService().cancelTheTicket();
                 showUserMenu();
                 break;
+            case 5:
+                new UserService().changePassword();
+                showUserMenu();
+                break;
             case 0:
                 System.exit(0);
         }
     }
 
-    private int inputCorrectValue() {
+    private int inputCorrectValueFromZeroToFive() {
         String valueString = null;
         boolean correctness = false;
         while (correctness == false) {
             valueString = scanString();
-            Pattern pattern = Pattern.compile("[0-4]{1}");
+            Pattern pattern = Pattern.compile("[0-5]{1}");
             Matcher matcher = pattern.matcher(valueString);
             if (matcher.matches() == false) {
                 System.out.println("Неверный запрос, повторите попытку.");

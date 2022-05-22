@@ -2,14 +2,18 @@ package by.lev.service;
 
 import static by.lev.controller.Authorization.USER_ONLINE;
 
+import by.lev.controller.Registration;
 import by.lev.controller.UserMenu;
 import by.lev.exceptions.MovieException;
 import by.lev.exceptions.TicketException;
+import by.lev.exceptions.UserException;
 import by.lev.movie.Movie;
 import by.lev.movie.MovieDao;
 import by.lev.movie.MovieDateTimeComporator;
+import by.lev.service.inputChecks.UserInputCheck;
 import by.lev.ticket.Ticket;
 import by.lev.ticket.TicketDao;
+import by.lev.user.UserDao;
 
 import static by.lev.service.ServiceFunction.*;
 
@@ -195,16 +199,17 @@ public class UserService {
         }
     }
 
-    public boolean checkTicketNumberInTheUserCollection(int ticketID){
+    public boolean checkTicketNumberInTheUserCollection(int ticketID) {
         List<Integer> userTicketIdList = new ArrayList<>();
         try {
             userTicketIdList = new TicketDao().getTicketNumbersOfTheUser(USER_ONLINE);
         } catch (TicketException e) {
             throw new RuntimeException(e);
         }
-        if (userTicketIdList.contains((Integer)ticketID)){
+        if (userTicketIdList.contains((Integer) ticketID)) {
             return true;
-        }return false;
+        }
+        return false;
     }
 
     public void cancelTheTicket() {
@@ -212,19 +217,45 @@ public class UserService {
         showUserTickets();
         System.out.println("Введите номер билета для отмены...");
         int choice = scanInt();
-        if(checkTicketNumberInTheUserCollection(choice) == true){
-        try {
-            new TicketDao().update(choice);
-            System.out.println("Ваш запрос выполнен!");
-        } catch (TicketException e) {
-            throw new RuntimeException(e);
-        }
-        } else{
+        if (checkTicketNumberInTheUserCollection(choice) == true) {
+            try {
+                new TicketDao().update(choice);
+                System.out.println("Ваш запрос выполнен!");
+            } catch (TicketException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
             System.out.println("Введенного номера билета в списке ваших не имеется!");
         }
         System.out.println();
         System.out.println("Ваши билеты:");
         showUserTickets();
         System.out.println();
+    }
+
+    public void changePassword() {
+        System.out.println("введите свой пароль...");
+        String oldPassword = scanString();
+        if (USER_ONLINE.getPassword() != oldPassword) {
+            System.out.println("в операции отказано: вы ввели неверный пароль");
+            new UserMenu().showUserMenu();
+        }
+        System.out.println("введите новый пароль...");
+        String newPassword = scanString();
+        while (new Registration().checkTheCorrectnessOfThePasswordInput(newPassword) == false) {
+            newPassword = scanString();
+        }
+        System.out.println("повторите пароль...");
+        String repeatPassword = scanString();
+        if (!newPassword.equals(repeatPassword)) {
+            System.out.println("введенные пароли не совпадают");
+            new UserMenu().showUserMenu();
+        }
+        try {
+            new UserDao().update(USER_ONLINE.getLogin(), newPassword);
+            System.out.println("пароль успешно обновлен");
+        } catch (UserException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

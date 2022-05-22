@@ -14,7 +14,7 @@ public class ManagerMenu extends UserMenu {
         System.out.println("- - -| СТРАНИЦА МЕНЕДЖЕРА |- - -");
         System.out.println("<1> - посмотреть весь список фильмов");
         System.out.println("<2> - посмотреть список предстоящих сеансов");
-        System.out.println("<3> - посмотреть список пользователей");
+        System.out.println("<3> - список пользователей");
         System.out.println("<4> - купить билет для пользователя");
         System.out.println("<5> - посмотреть купленные билеты пользователя");
         System.out.println("<6> - отменить билет у пользователя");
@@ -48,7 +48,7 @@ public class ManagerMenu extends UserMenu {
                 showManagerMenu();
                 break;
             case 6:
-                new ManagerService().cancelTheTicketOfTheUser();
+                new ManagerService().cancelTheTicket();
                 showManagerMenu();
                 break;
             case 7:

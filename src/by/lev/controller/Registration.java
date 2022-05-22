@@ -23,13 +23,13 @@ public class Registration {
         } catch (UserException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Ваша учетная запись успешно добавлена");
+        System.out.println("учетная запись успешно добавлена");
     }
 
     public void setCorrectLogin() {
         System.out.println("- - -| CACTUS CINEMA |- - -");
         System.out.println("- - -|  РЕГИСТРАЦИЯ  |- - -");
-        System.out.println("Ваш логин: ");
+        System.out.println("введите логин для новой учетной записи: ");
         String login = scanString();
         while (checkTheCorrectnessOfTheLoginInput(login) == false) {
             login = scanString();
@@ -56,7 +56,6 @@ public class Registration {
         while (checkTheCorrectnessOfThePasswordInput(password) == false) {
             password = scanString();
         }
-
         System.out.println("повторите пароль ...");
         String repeatPassword = scanString();
         if (password.equals(repeatPassword)) {
