@@ -1,6 +1,5 @@
 package by.lev.user;
 
-import by.lev.ticket.TicketDatabaseAction;
 import by.lev.exceptions.UserException;
 
 import java.sql.Connection;
@@ -90,6 +89,7 @@ public class UserDao implements UserDatabaseAction<User, String> {
         }
     }
 
+
     public List<String> getUserNameList() throws UserException {
         List<String> usernames = new ArrayList<>();
         try {
@@ -112,7 +112,7 @@ public class UserDao implements UserDatabaseAction<User, String> {
         return usernames;
     }
 
-    @Override
+
     public boolean update(String login, String newPassword) throws UserException {
         try {
             Connection connection = getConnection();

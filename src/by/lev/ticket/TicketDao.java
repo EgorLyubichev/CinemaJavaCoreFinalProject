@@ -15,7 +15,7 @@ import static by.lev.databaseConnection.AbstractConnection.*;
 import static by.lev.exceptions.EnumTicketException.*;
 import static by.lev.databaseConnection.ScriptConstant.*;
 
-public class TicketDao implements TicketDatabaseAction<Ticket, Integer> {
+public class TicketDao implements TicketDatabaseAction<Ticket, Integer, String> {
     @Override
     public boolean create(Ticket ticket) throws TicketException {
         try {
@@ -99,6 +99,11 @@ public class TicketDao implements TicketDatabaseAction<Ticket, Integer> {
         }
     }
 
+
+    public boolean update(Integer integer, String s) throws TicketException {
+        return false;
+    }
+
     public List<Ticket> readAll(User user) throws TicketException {
         List<Ticket> userTickets = new ArrayList<>();
         try {
@@ -152,13 +157,13 @@ public class TicketDao implements TicketDatabaseAction<Ticket, Integer> {
     }
 
 
-    @Override
-    public boolean update(Integer ticketID, Integer newPlace) throws TicketException {
+
+    public boolean update(Integer ticketID, Object newPlace) throws TicketException {
         try {
             Connection connection = getConnection();
             PreparedStatement prs = connection.prepareStatement(
                     "UPDATE tickets SET place=? WHERE ticketID=?");
-            prs.setInt(1, newPlace);
+            prs.setInt(1, (Integer) newPlace);
             prs.setInt(2, ticketID);
             prs.execute();
             return true;

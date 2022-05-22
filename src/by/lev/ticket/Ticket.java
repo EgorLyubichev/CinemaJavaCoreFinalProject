@@ -79,15 +79,25 @@ public class Ticket {
         return bought;
     }
 
+    public String userNameToString(){
+        if (userName == null){
+            return "не назначен";
+        }return userName;
+    }
+
+
+    public String boughtToString(){
+        if (bought == false){
+            return "не приобретен";
+        }return "приобретен";
+    }
     @Override
     public String toString() {
-        return "Ticket{" +
-                "ticketID=" + ticketID +
-                ", userName='" + userName + '\'' +
-                ", movieID=" + movieID +
-                ", place=" + place +
-                ", cost=" + cost +
-                ", bought=" + bought +
-                '}';
+        return "Билет №" + ticketID +
+                ", пользователь: " + userNameToString() +
+                ", номер фильма: " + movieID +
+                ", место: " + place +
+                ", цена: " + cost +
+                " | " + boughtToString();
     }
 }

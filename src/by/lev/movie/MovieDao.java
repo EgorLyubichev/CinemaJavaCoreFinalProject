@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MovieDao implements MovieDatabaseAction<Movie, Integer> {
+public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
     @Override
     public boolean create(Movie movie) throws MovieException {
         try {
@@ -116,20 +116,34 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer> {
         return movies;
     }
 
-    @Override
-    public boolean update(Integer oldT, Integer newT) throws Exception {
-        return false;
+    public boolean update(Integer movieID, String movieTitle) throws MovieException {
+        try {
+            Connection connection = getConnection();
+            PreparedStatement prs = connection.prepareStatement(
+                    "UPDATE movie SET movieTitle=? WHERE movieID=?");
+            prs.setString(1, movieTitle);
+            prs.setInt(2, movieID);
+            prs.execute();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                closeConnection();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 
-    @Override
-    public boolean update(Movie oldMovie, Movie newMovie) throws MovieException {
+    public boolean update(int movieID, Timestamp newTimestamp) throws MovieException {
         try {
             Connection connection = getConnection();
             PreparedStatement prs = connection.prepareStatement(
                     "UPDATE movie SET dateTime=? WHERE movieID=?");
-            prs.setTimestamp(1, newMovie.getDateTime());
-            prs.setInt(2, oldMovie.getMovieID());
+            prs.setTimestamp(1, newTimestamp);
+            prs.setInt(2, movieID);
             prs.execute();
             return true;
         } catch (SQLException e) {

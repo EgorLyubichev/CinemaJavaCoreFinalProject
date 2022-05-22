@@ -12,9 +12,7 @@ public class Movie {
     private List<Ticket> ticketList;
 
     public Movie() {
-
     }
-
 
     public Movie(String title, String dateTime) {
         this.title = title;
@@ -31,7 +29,6 @@ public class Movie {
             String dateTime2 = dateTime + ":00";
             this.dateTime = Timestamp.valueOf(dateTime2);
         }else{this.dateTime = Timestamp.valueOf(dateTime);}
-
     }
 
     public int getMovieID() {
@@ -69,24 +66,20 @@ public class Movie {
 
     @Override
     public String toString() {
-        return "Movie{" +
-                "movieID=" + movieID +
-                ", title='" + title + '\'' +
-                ", dateTime=" + showDateTimeWithoutSeconds() + " " +
-                showTicketList() +
-                '}';
+        return "уч.запись №" + movieID +
+                " | фильм:  " + title + " | " + showDateTimeWithoutSeconds() + " " +
+                showTicketList() + "\n";
     }
 
     private String showTicketList() {
         if(ticketList.isEmpty()){
-            return "\n\tTickets couldn't be added up to now.\n";
+            return "\n\tбилеты не были добавлены!\n";
         }else{
-        StringBuilder stb = new StringBuilder("Tickets:\n");
+        StringBuilder stb = new StringBuilder("Билеты:\n");
         for (Ticket ticket : ticketList) {
             stb.append("\t" + ticket.toString() + "\n");
         }
         return stb.toString();}
-
     }
 
     private String showDateTimeWithoutSeconds(){
