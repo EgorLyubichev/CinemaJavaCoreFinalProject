@@ -50,8 +50,7 @@ public class MovieInputCheck {
             while(rs.next()){
                 Timestamp ts = rs.getTimestamp("dateTime");
                 if(ts != null){
-                    System.out.println("Указанная дата уже занята другим сеансом!");
-                    return true;
+                    return true; //Указанная дата уже занята другим сеансом!"
                 }
             }
         } catch (SQLException e) {

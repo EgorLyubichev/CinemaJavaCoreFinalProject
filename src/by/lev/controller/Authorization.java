@@ -56,7 +56,7 @@ public class Authorization {
         } else if (USER_ONLINE.getLevel() == MANAGER) {
             new ManagerMenu().showManagerMenu();
         } else if (USER_ONLINE.getLevel() == ADMINISTRATOR) {
-
+            new AdministratorMenu().showAdminMenu();
         }
     }
 }

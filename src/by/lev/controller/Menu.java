@@ -20,7 +20,7 @@ public class Menu {
                 new Registration().createNewUser();
                 break;
             case 0:
-                //такой метод
+                System.exit(0);
 
         }
     }

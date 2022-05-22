@@ -1,6 +1,7 @@
 package by.lev.ticket;
 
 import by.lev.exceptions.TicketException;
+import by.lev.movie.Movie;
 import by.lev.user.User;
 
 import java.sql.Connection;
@@ -225,6 +226,25 @@ public class TicketDao implements TicketDatabaseAction<Ticket, Integer, String> 
             PreparedStatement prs = connection.prepareStatement(
                     "DELETE FROM tickets WHERE ticketID=?");
             prs.setInt(1, ticketID);
+            prs.execute();
+            return true;
+        } catch (SQLException e) {
+            throw new TicketException(TD_05);
+        } finally {
+            try {
+                closeConnection();
+            } catch (SQLException e) {
+                throw new TicketException(TD_05f);
+            }
+        }
+    }
+
+    public boolean delete(Movie movie) throws TicketException {
+        try {
+            Connection connection = getConnection();
+            PreparedStatement prs = connection.prepareStatement(
+                    "DELETE FROM tickets WHERE movieID=?");
+            prs.setInt(1, movie.getMovieID());
             prs.execute();
             return true;
         } catch (SQLException e) {
