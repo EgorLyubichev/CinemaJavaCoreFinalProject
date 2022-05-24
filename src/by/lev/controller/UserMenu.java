@@ -1,11 +1,10 @@
 package by.lev.controller;
 
 import by.lev.service.UserService;
+import by.lev.service.inputChecks.InputCorrectness;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static by.lev.service.ServiceFunction.*;
+import static by.lev.Constant.INCORRECT_INPUT;
 
 public class UserMenu {
     public void showUserMenu() {
@@ -18,9 +17,13 @@ public class UserMenu {
         System.out.println("<5> - сменить пароль");
         System.out.println("<0> - выход из программы");
 
-        int choice = inputCorrectValueFromZeroToFive();
-
-        switch (choice) {
+        int inputValue = new InputCorrectness().inputCorrectValueFromZeroToFive();
+        if (inputValue == -1){
+            System.out.println(INCORRECT_INPUT.getMessage());
+            System.out.println();
+            showUserMenu();
+        }
+        switch (inputValue) {
             case 1:
                 new UserService().showUpcomingMovies();
                 System.out.println();
@@ -44,22 +47,5 @@ public class UserMenu {
             case 0:
                 System.exit(0);
         }
-    }
-
-    private int inputCorrectValueFromZeroToFive() {
-        String valueString = null;
-        boolean correctness = false;
-        while (correctness == false) {
-            valueString = scanString();
-            Pattern pattern = Pattern.compile("[0-5]{1}");
-            Matcher matcher = pattern.matcher(valueString);
-            if (matcher.matches() == false) {
-                System.out.println("Неверный запрос, повторите попытку.");
-            } else {
-                correctness = true;
-            }
-        }
-        int result = Integer.parseInt(valueString);
-        return result;
     }
 }
