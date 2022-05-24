@@ -1,9 +1,10 @@
 package by.lev.exceptions;
 
-public class TicketException extends Exception{
+public class TicketException extends Exception {
     private EnumTicketException errorCode;
 
-    public TicketException(EnumTicketException ex) {
-        System.err.println("Error: " + ex + " '" + ex.getMessage() + "'");
+    public TicketException(EnumTicketException errorCode, String message, Throwable cause) {
+        super(message, cause);
+        this.errorCode = errorCode;
     }
 }

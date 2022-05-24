@@ -45,7 +45,7 @@ public class TicketInputCheck {
                 }
             }
         } catch (SQLException e) {
-            throw new TicketException(MSC_01);
+            throw new TicketException(MSC_01, MSC_01.getMessage(), e);
         } finally {
             try {
                 AbstractConnection.closeConnection();

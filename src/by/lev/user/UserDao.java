@@ -25,12 +25,12 @@ public class UserDao implements UserDatabaseAction<User, String> {
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new UserException(UD_001);
+            throw new UserException(UD_001, UD_001.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_001f);
+                throw new UserException(UD_001f, UD_001f.getMessage(), e);
             }
         }
     }
@@ -51,13 +51,13 @@ public class UserDao implements UserDatabaseAction<User, String> {
                 user.setLevel(rs.getString("level"));
             }
             return user;
-        } catch (SQLException throwables) {
-            throw new UserException(UD_002);
+        } catch (SQLException e) {
+            throw new UserException(UD_002, UD_002.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_002f);
+                throw new UserException(UD_002f, UD_002f.getMessage(), e);
             }
         }
     }
@@ -79,12 +79,12 @@ public class UserDao implements UserDatabaseAction<User, String> {
             }
             return users;
         } catch (SQLException e) {
-            throw new UserException(UD_003);
+            throw new UserException(UD_003, UD_003.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_003f);
+                throw new UserException(UD_003f, UD_003f.getMessage(), e);
             }
         }
     }
@@ -101,12 +101,12 @@ public class UserDao implements UserDatabaseAction<User, String> {
                 usernames.add(username);
             }
         } catch (SQLException e) {
-            throw new UserException(UD_006);
+            throw new UserException(UD_006, UD_006.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_006f);
+                throw new UserException(UD_006f, UD_006f.getMessage(), e);
             }
         }
         return usernames;
@@ -123,12 +123,12 @@ public class UserDao implements UserDatabaseAction<User, String> {
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new UserException(UD_004);
+            throw new UserException(UD_004, UD_004.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_004f);
+                throw new UserException(UD_004f, UD_004f.getMessage(), e);
             }
         }
     }
@@ -142,12 +142,12 @@ public class UserDao implements UserDatabaseAction<User, String> {
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new UserException(UD_005);
+            throw new UserException(UD_005, UD_005.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_005f);
+                throw new UserException(UD_005f, UD_005f.getMessage(), e);
             }
         }
     }

@@ -10,11 +10,5 @@ public class Main {
     public static void main(String[] args) throws MovieException, TicketException {
         new Menu().start();
 
-
-
-
-
-
-
     }
 }

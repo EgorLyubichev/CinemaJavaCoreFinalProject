@@ -19,7 +19,6 @@ public enum EnumMovieException {
     UC_01("The app couldn't get dateTime this movie!");
 
     private String message;
-    //"The program couldn't close connection!";
 
     EnumMovieException(String message) {
         this.message = message;

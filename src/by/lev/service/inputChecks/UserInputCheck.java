@@ -30,7 +30,7 @@ public class UserInputCheck {
                 passwordFromDatabase = rs.getString("password");
             }
         } catch (SQLException e) {
-            throw new UserException(USC_01);
+            throw new UserException(USC_01, USC_01.getMessage(), e);
         } finally {
             try {
                 AbstractConnection.closeConnection();

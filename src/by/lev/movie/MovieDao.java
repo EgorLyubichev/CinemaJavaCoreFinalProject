@@ -25,13 +25,13 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new MovieException(MD_001, e.getMessage(), new Throwable().getCause());
+            throw new MovieException(MD_001, MD_001.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (
                     SQLException e) {
-                throw new MovieException(MD_001f, e.getMessage(), new Throwable().getCause());
+                throw new MovieException(MD_001f, MD_001f.getMessage(), e);
             }
         }
     }
@@ -53,12 +53,12 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
             }
             return movie;
         } catch (SQLException e) {
-            throw new MovieException(MD_002, e.getMessage(), new Throwable().getCause());
+            throw new MovieException(MD_002, MD_002.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_002f, e.getMessage(), new Throwable().getCause());
+                throw new MovieException(MD_002f, MD_002f.getMessage(), e);
             }
         }
     }
@@ -79,12 +79,12 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
             }
             return movie;
         } catch (SQLException e) {
-            throw new MovieException(MD_002, e.getMessage(), new Throwable().getCause());
+            throw new MovieException(MD_002, MD_002.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_002f, e.getMessage(), new Throwable().getCause());
+                throw new MovieException(MD_002f, MD_002f.getMessage(), e);
             }
         }
     }
@@ -105,12 +105,12 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
                 movies.add(movie);
             }
         } catch (SQLException e) {
-            throw new MovieException(MD_003, e.getMessage(), new Throwable().getCause());
+            throw new MovieException(MD_003, MD_003.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_003f, e.getMessage(), new Throwable().getCause());
+                throw new MovieException(MD_003f, MD_003f.getMessage(), e);
             }
         }
         return movies;
@@ -147,12 +147,12 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new MovieException(MD_004, e.getMessage(), new Throwable().getCause());
+            throw new MovieException(MD_004, MD_004.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_004f, e.getMessage(), new Throwable().getCause());
+                throw new MovieException(MD_004f, MD_004f.getMessage(), e);
             }
         }
     }
@@ -166,12 +166,12 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new MovieException(MD_005, e.getMessage(), new Throwable().getCause());
+            throw new MovieException(MD_005, MD_005.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_005f, e.getMessage(), new Throwable().getCause());
+                throw new MovieException(MD_005f, MD_005f.getMessage(), e);
             }
         }
     }
@@ -213,12 +213,12 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
                 }
             }
         } catch (SQLException e) {
-            new MovieException(MD_006, e.getMessage(), new Throwable().getCause());
+            new MovieException(MD_006, MD_006.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                new MovieException(MD_006f, e.getMessage(), new Throwable().getCause());
+                new MovieException(MD_006f, MD_006f.getMessage(), e);
             }
         }
         return movieSessions;
@@ -237,12 +237,12 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
                 return -1;
             }
         } catch (SQLException e) {
-            throw new MovieException(MD_007, e.getMessage(), new Throwable().getCause());
+            throw new MovieException(MD_007, MD_007.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_007f, e.getMessage(), new Throwable().getCause());
+                throw new MovieException(MD_007f, MD_007f.getMessage(), e);
             }
         }
 
