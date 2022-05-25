@@ -162,7 +162,7 @@ public class AdministratorMenuAction extends ManagerMenuAction {
         }
         List<Integer> userTicketNumbers = new ArrayList<>();
         try {
-             userTicketNumbers = new TicketDao().getTicketNumbersOfTheUser(user);
+             userTicketNumbers = new TicketDao().readTicketNumbersOfTheUser(user);
         } catch (TicketException e) {
             throw new RuntimeException(e);
         }

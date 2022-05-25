@@ -36,7 +36,7 @@ public class Registration {
         }
         List<String> userLoginList = new ArrayList<>();
         try {
-            userLoginList = new UserDao().getUserNameList();
+            userLoginList = new UserDao().readUserNameList();
             for (String username:userLoginList) {
                 username = username.toLowerCase();
             }

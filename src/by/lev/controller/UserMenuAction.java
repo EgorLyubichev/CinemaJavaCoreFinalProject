@@ -2,15 +2,11 @@ package by.lev.controller;
 
 import static by.lev.controller.Authorization.USER_ONLINE;
 
-import by.lev.exceptions.MovieException;
-import by.lev.exceptions.TicketException;
-import by.lev.exceptions.UserException;
 import by.lev.movie.Movie;
-import by.lev.movie.MovieDao;
 import by.lev.service.MovieService;
+import by.lev.service.TicketService;
+import by.lev.service.UserService;
 import by.lev.ticket.Ticket;
-import by.lev.ticket.TicketDao;
-import by.lev.user.UserDao;
 
 import static by.lev.controller.InputFunction.*;
 
@@ -21,7 +17,7 @@ import java.util.List;
 public class UserMenuAction {
 
     public void showUpcomingSessions() {
-        List<Movie> upcomingMovies = new MovieService().getUpcomingMovieSession();
+        List<Movie> upcomingMovies = new MovieService().getUpcomingMovies();
         for (Movie movie : upcomingMovies) {
             StringBuilder strB = new StringBuilder(movie.getDateTime().toString().substring(0, 16))
                     .append(" | ").append(movie.getTitle())
@@ -47,7 +43,7 @@ public class UserMenuAction {
             System.out.println("Введите название фильма...");
             String title = scanString();
             title = title.toUpperCase().trim();
-            if (new MovieService().checkIfTheTitleContainsInTheTitleList(title)){
+            if (new MovieService().checkIfTitleListContainsTheTitle(title)) {
                 System.out.println("Предстоящие сеансы:");
                 List<Timestamp> movieSessions = new MovieService().getUpcomingTimestampsOfTheMovie(title);
                 if (movieSessions.isEmpty()) {
@@ -60,8 +56,8 @@ public class UserMenuAction {
                     }
                 }
                 timestampList = movieSessions;
-            }else{
-                System.out.println("операция прервана: данного названия в списке имеющихся фильмов нет");
+            } else {
+                System.out.println("операция прервана: заданного названия в списке имеющихся фильмов нет");
                 new UserMenu().showUserMenu();
             }
         }
@@ -79,16 +75,8 @@ public class UserMenuAction {
                 movie.setDateTime(timestampList.get(choice - 1));
             }
             System.out.println("Имеющиеся билеты:");
-            try {
-                movie.setMovieID(new MovieDao().getMovieIdOnTheDateTimeRequest(movie.getDateTime()));
-            } catch (MovieException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                freeTickets = new TicketDao().readTicketListFromTicketsByTheMovieIdRequest(movie.getMovieID());
-            } catch (TicketException e) {
-                throw new RuntimeException(e);
-            }
+            movie.setMovieID(new MovieService().getMovieIdOnTheDateTimeRequest(movie.getDateTime()));
+            freeTickets = new TicketService().getFreeTicketsOfTheSession(movie.getMovieID());
             if (freeTickets.isEmpty()) {
                 System.out.println("\tк сожалению, на данный сеанс свободных билетов не осталось");
                 new UserMenu().showUserMenu();
@@ -106,18 +94,14 @@ public class UserMenuAction {
 
         public void chooseATicket() {
             List<Integer> freeTicketNumbers = new ArrayList<>();
-            System.out.println("Выберите нужный билет... (№ билета)");
-            int choice = scanInt();
             for (Ticket freeTicket : freeTickets) {
                 freeTicketNumbers.add(freeTicket.getTicketID());
             }
+            System.out.println("Выберите нужный билет... (№ билета)");
+            int choice = scanInt();
             if (freeTicketNumbers.contains(choice)) {
-                try {
-                    ticket = new TicketDao().read(choice);
-                    System.out.println("Билет " + ticket.getTicketID() + " выбран!");
-                } catch (TicketException e) {
-                    throw new RuntimeException(e);
-                }
+                ticket = new TicketService().getTicket(choice);
+                System.out.println("Билет " + ticket.getTicketID() + " выбран!");
             } else {
                 System.out.println("Неверный ввод данных");
                 chooseATicket();
@@ -130,11 +114,7 @@ public class UserMenuAction {
             int choice = scanInt();
             switch (choice) {
                 case 1:
-                    try {
-                        new TicketDao().update(ticket.getTicketID(), USER_ONLINE);
-                    } catch (TicketException e) {
-                        throw new RuntimeException(e);
-                    }
+                    new TicketService().assignTheUserInTheTicket(ticket.getTicketID(), USER_ONLINE);
                     System.out.println("Билет оплачен!");
                     System.out.println("<1> - купить новый билет\n<2> - перейти в основное меню");
                     boolean inputCorrect = false;
@@ -166,35 +146,22 @@ public class UserMenuAction {
     public void showUserTickets() {
         List<Ticket> userTickets;
         Movie movie;
-        try {
-            userTickets = new TicketDao().readAll(USER_ONLINE);
-        } catch (TicketException e) {
-            throw new RuntimeException(e);
-        }
+        userTickets = new TicketService().getUserTickets(USER_ONLINE);
         for (Ticket ticket : userTickets) {
             int movieID = ticket.getMovieID();
-            try {
-                movie = new MovieDao().read(movieID);
-                StringBuilder strB = new StringBuilder("Билет № ");
-                strB.append(ticket.getTicketID()).append(" | ").append(movie.getTitle()).append(" | ")
-                        .append(movie.getDateTime().toString().substring(0, 16)).append(" | владелец: ").append(USER_ONLINE.getLogin()).append(" | место: ")
-                        .append(ticket.getPlace()).append(" | цена: ").append(ticket.getCost()).append("$");
-                System.out.println(strB);
-            } catch (MovieException e) {
-                throw new RuntimeException(e);
-            }
-
+            movie = new MovieService().getMovie(movieID);
+            StringBuilder strB = new StringBuilder("Билет № ");
+            strB.append(ticket.getTicketID()).append(" | ").append(movie.getTitle()).append(" | ")
+                    .append(movie.getDateTime().toString().substring(0, 16)).append(" | владелец: ")
+                    .append(USER_ONLINE.getLogin()).append(" | место: ").append(ticket.getPlace())
+                    .append(" | цена: ").append(ticket.getCost()).append("$");
+            System.out.println(strB);
         }
     }
 
     public boolean checkTicketNumberInTheUserCollection(int ticketID) {
-        List<Integer> userTicketIdList = new ArrayList<>();
-        try {
-            userTicketIdList = new TicketDao().getTicketNumbersOfTheUser(USER_ONLINE);
-        } catch (TicketException e) {
-            throw new RuntimeException(e);
-        }
-        if (userTicketIdList.contains((Integer) ticketID)) {
+        List<Integer> userTicketIdList = new TicketService().getTicketNumbersOfUser(USER_ONLINE);
+        if (userTicketIdList.contains(ticketID)) {
             return true;
         }
         return false;
@@ -205,13 +172,9 @@ public class UserMenuAction {
         showUserTickets();
         System.out.println("Введите номер билета для отмены...");
         int choice = scanInt();
-        if (checkTicketNumberInTheUserCollection(choice) == true) {
-            try {
-                new TicketDao().update(choice);
-                System.out.println("Ваш запрос выполнен!");
-            } catch (TicketException e) {
-                throw new RuntimeException(e);
-            }
+        if (checkTicketNumberInTheUserCollection(choice)) {
+            new TicketService().removeUsernameFromTicket(choice);
+            System.out.println("Ваш запрос выполнен!");
         } else {
             System.out.println("Введенного номера билета в списке ваших не имеется!");
         }
@@ -224,13 +187,13 @@ public class UserMenuAction {
     public void changePassword() {
         System.out.println("введите свой пароль...");
         String oldPassword = scanString();
-        if (USER_ONLINE.getPassword() != oldPassword) {
+        if (!USER_ONLINE.getPassword().equals(oldPassword)) {
             System.out.println("в операции отказано: вы ввели неверный пароль");
             new UserMenu().showUserMenu();
         }
         System.out.println("введите новый пароль...");
         String newPassword = scanString();
-        while (new Registration().checkTheCorrectnessOfThePasswordInput(newPassword) == false) {
+        while (!new Registration().checkTheCorrectnessOfThePasswordInput(newPassword)) {
             newPassword = scanString();
         }
         System.out.println("повторите пароль...");
@@ -239,11 +202,7 @@ public class UserMenuAction {
             System.out.println("введенные пароли не совпадают");
             new UserMenu().showUserMenu();
         }
-        try {
-            new UserDao().update(USER_ONLINE.getLogin(), newPassword);
-            System.out.println("пароль успешно обновлен");
-        } catch (UserException e) {
-            throw new RuntimeException(e);
-        }
+        new UserService().updatePassword(USER_ONLINE.getLogin(), newPassword);
+        System.out.println("пароль успешно обновлен");
     }
 }

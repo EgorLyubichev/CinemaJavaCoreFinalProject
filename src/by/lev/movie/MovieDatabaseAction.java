@@ -10,6 +10,6 @@ public interface MovieDatabaseAction<T, R, S> extends CrudOperation<Movie, Integ
     List<Timestamp> readTimestampsOfTheMovie(String title) throws MovieException;
     List<String> readTitles() throws MovieException;
     boolean update(int movieID, Timestamp newDateTime) throws MovieException;
-    int getMovieIdOnTheDateTimeRequest(Timestamp dateTime) throws MovieException;
+    int readMovieIdOnTheDateTimeRequest(Timestamp dateTime) throws MovieException;
 
 }

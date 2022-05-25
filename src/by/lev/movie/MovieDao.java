@@ -248,13 +248,13 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
         }
     }
 
-    public int getMovieIdOnTheDateTimeRequest(Timestamp dateTime) throws MovieException {
-        Connection connection = getConnection();
-        PreparedStatement prs1 = null;
+    public int readMovieIdOnTheDateTimeRequest(Timestamp dateTime) throws MovieException {
         try {
-            prs1 = connection.prepareStatement("SELECT movieID FROM movie WHERE dateTime=?");
-            prs1.setTimestamp(1, dateTime);
-            ResultSet rs1 = prs1.executeQuery();
+            Connection connection = getConnection();
+            PreparedStatement prs = connection.prepareStatement(
+                    "SELECT movieID FROM movie WHERE dateTime=?");
+            prs.setTimestamp(1, dateTime);
+            ResultSet rs1 = prs.executeQuery();
             if (rs1.next()) {
                 return rs1.getInt("movieID");
             } else {
@@ -269,6 +269,5 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
                 throw new MovieException(MD_007f, MD_007f.getMessage(), e);
             }
         }
-
     }
 }

@@ -90,7 +90,7 @@ public class UserDao implements UserDatabaseAction<User, String> {
     }
 
 
-    public List<String> getUserNameList() throws UserException {
+    public List<String> readUserNameList() throws UserException {
         List<String> usernames = new ArrayList<>();
         try {
             Connection connection = getConnection();

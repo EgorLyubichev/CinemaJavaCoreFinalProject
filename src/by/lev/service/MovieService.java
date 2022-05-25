@@ -12,7 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieService implements MovieServiceInterface {
-    public List<Movie> getUpcomingMovieSession() {
+    @Override
+    public List<Movie> getAllMovies() {
+        List<Movie> movies = new ArrayList<>();
+        try {
+            movies = new MovieDao().readAll();
+        } catch (MovieException e) {
+            e.printStackTrace();
+        }
+        movies.sort(new MovieDateTimeComporator());
+        return movies;
+    }
+
+    @Override
+    public List<Movie> getUpcomingMovies() {
         List<Movie> movieList = new ArrayList<>();
         List<Movie> upcomingMovies = new ArrayList<>();
         try {
@@ -48,7 +61,7 @@ public class MovieService implements MovieServiceInterface {
     }
 
     @Override
-    public boolean checkIfTheTitleContainsInTheTitleList(String title) {
+    public boolean checkIfTitleListContainsTheTitle(String title) {
         List<String> titles = new ArrayList<>();
         try {
             titles = new MovieDao().readTitles();
@@ -59,5 +72,43 @@ public class MovieService implements MovieServiceInterface {
         return false;
     }
 
+    @Override
+    public int getMovieIdOnTheDateTimeRequest(Timestamp timestamp) {
+        int result = -1;
+        try {
+            result =  new MovieDao().readMovieIdOnTheDateTimeRequest(timestamp);
+        } catch (MovieException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
+    @Override
+    public Movie getMovie(int movieID) {
+        Movie movie = new Movie();
+        try {
+            movie = new MovieDao().read(movieID);
+        } catch (MovieException e) {
+            e.printStackTrace();
+        }
+        return movie;
+    }
+
+    @Override
+    public void updateTitleOfMovie(int movieID, String title) {
+        try {
+            new MovieDao().update(movieID, title);
+        } catch (MovieException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateDateTimeOfMovie(int movieID, Timestamp newTimestamp) {
+        try {
+            new MovieDao().update(movieID, newTimestamp);
+        } catch (MovieException e) {
+            e.printStackTrace();
+        }
+    }
 }

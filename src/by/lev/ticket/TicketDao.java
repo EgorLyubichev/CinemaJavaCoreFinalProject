@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static by.lev.controller.Authorization.USER_ONLINE;
 import static by.lev.databaseConnection.AbstractConnection.*;
 import static by.lev.exceptions.EnumTicketException.*;
 import static by.lev.databaseConnection.ScriptConstant.*;
@@ -133,7 +132,7 @@ public class TicketDao implements TicketDatabaseAction<Ticket, Integer, String> 
         }
     }
 
-    public List<Integer> getTicketNumbersOfTheUser(User user) throws TicketException {
+    public List<Integer> readTicketNumbersOfTheUser(User user) throws TicketException {
         List<Integer> ticketNumbersList = new ArrayList<>();
         try {
             Connection connection = getConnection();
@@ -146,12 +145,12 @@ public class TicketDao implements TicketDatabaseAction<Ticket, Integer, String> 
                 ticketNumbersList.add(ticketID);
             }
         } catch (SQLException e) {
-            throw new TicketException(TD_031, TD_031.getMessage(), e);//исправить!!!
+            throw new TicketException(TD_031, TD_031.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new TicketException(TD_031f, TD_031f.getMessage(), e);//исправить!!!
+                throw new TicketException(TD_031f, TD_031f.getMessage(), e);
             }
         }
         return ticketNumbersList;
