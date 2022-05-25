@@ -238,12 +238,12 @@ public class TicketDao implements TicketDatabaseAction<Ticket, Integer, String> 
         }
     }
 
-    public boolean delete(Movie movie) throws TicketException {
+    public boolean delete(int movieID) throws TicketException {
         try {
             Connection connection = getConnection();
             PreparedStatement prs = connection.prepareStatement(
                     "DELETE FROM tickets WHERE movieID=?");
-            prs.setInt(1, movie.getMovieID());
+            prs.setInt(1, movieID);
             prs.execute();
             return true;
         } catch (SQLException e) {

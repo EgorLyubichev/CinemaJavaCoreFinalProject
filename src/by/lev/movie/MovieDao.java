@@ -1,5 +1,6 @@
 package by.lev.movie;
 
+import by.lev.databaseConnection.AbstractConnection;
 import by.lev.exceptions.MovieException;
 import by.lev.ticket.Ticket;
 
@@ -269,5 +270,25 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
                 throw new MovieException(MD_007f, MD_007f.getMessage(), e);
             }
         }
+    }
+    public boolean isTheSlotOfThisDateTimeOccuped(String dateTime) throws MovieException {
+        try {
+            Connection connection = AbstractConnection.getConnection();
+            PreparedStatement prs = connection.prepareStatement("SELECT dateTime FROM movie WHERE dateTime=?");
+            prs.setTimestamp(1, Timestamp.valueOf(dateTime));
+            ResultSet rs = prs.executeQuery();
+            if (rs.next()) {
+                return true; //Указанная дата уже занята другим сеансом!"
+            }
+        } catch (SQLException e) {
+            throw new MovieException(MD_009, MD_009.getMessage(), e);
+        } finally {
+            try {
+                closeConnection();
+            } catch (SQLException e) {
+                throw new MovieException(MD_009F, MD_009F.getMessage(), e);
+            }
+        }
+        return false;
     }
 }

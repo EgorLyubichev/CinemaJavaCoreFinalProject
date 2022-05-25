@@ -9,6 +9,10 @@ import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static by.lev.databaseConnection.AbstractConnection.closeConnection;
+import static by.lev.exceptions.EnumMovieException.MD_009;
+import static by.lev.exceptions.EnumMovieException.MD_009F;
+
 
 public class MovieInputCheck {
     public boolean checkTheCorrectnessMovieTitle(String title) {
@@ -41,21 +45,5 @@ public class MovieInputCheck {
         return true;
     }
 
-    public boolean isTheSlotOfThisDateTimeOccuped(String dateTime) throws MovieException {
-        try {
-            Connection connection = AbstractConnection.getConnection();
-            PreparedStatement prs = connection.prepareStatement("SELECT dateTime FROM movie WHERE dateTime=?");
-            prs.setTimestamp(1, Timestamp.valueOf(dateTime));
-            ResultSet rs = prs.executeQuery();
-            while(rs.next()){
-                Timestamp ts = rs.getTimestamp("dateTime");
-                if(ts != null){
-                    return true; //Указанная дата уже занята другим сеансом!"
-                }
-            }
-        } catch (SQLException e) {
-            throw new MovieException(EnumMovieException.MIC_01, e.getMessage(), new Throwable().getCause());
-        }
-        return false;
-    }
+
 }

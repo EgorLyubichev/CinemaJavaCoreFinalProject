@@ -11,5 +11,6 @@ public interface MovieDatabaseAction<T, R, S> extends CrudOperation<Movie, Integ
     List<String> readTitles() throws MovieException;
     boolean update(int movieID, Timestamp newDateTime) throws MovieException;
     int readMovieIdOnTheDateTimeRequest(Timestamp dateTime) throws MovieException;
+    boolean isTheSlotOfThisDateTimeOccuped(String dateTime) throws MovieException;
 
 }

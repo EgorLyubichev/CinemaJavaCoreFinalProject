@@ -13,6 +13,15 @@ import java.util.List;
 
 public class MovieService implements MovieServiceInterface {
     @Override
+    public void addMovie(Movie movie) {
+        try {
+            new MovieDao().create(movie);
+        } catch (MovieException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public List<Movie> getAllMovies() {
         List<Movie> movies = new ArrayList<>();
         try {
@@ -68,8 +77,7 @@ public class MovieService implements MovieServiceInterface {
         } catch (MovieException e) {
             e.printStackTrace();
         }
-        if (titles.contains(title)){return true;}
-        return false;
+        return titles.contains(title);
     }
 
     @Override
@@ -95,6 +103,17 @@ public class MovieService implements MovieServiceInterface {
     }
 
     @Override
+    public Movie getMovie(String title) {
+        Movie movie = new Movie();
+        try {
+            movie = new MovieDao().read(title);
+        } catch (MovieException e) {
+            e.printStackTrace();
+        }
+        return movie;
+    }
+
+    @Override
     public void updateTitleOfMovie(int movieID, String title) {
         try {
             new MovieDao().update(movieID, title);
@@ -110,5 +129,25 @@ public class MovieService implements MovieServiceInterface {
         } catch (MovieException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void removeMovie(int movieID) {
+        try {
+            new MovieDao().delete(movieID);
+        } catch (MovieException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean isTheSlotOfThisDateTimeOccuped(String dateTime) {
+        try {
+            new MovieDao().isTheSlotOfThisDateTimeOccuped(dateTime);
+            return true;
+        } catch (MovieException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

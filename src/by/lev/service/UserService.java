@@ -1,6 +1,7 @@
 package by.lev.service;
 
 import by.lev.exceptions.UserException;
+import by.lev.user.User;
 import by.lev.user.UserDao;
 import by.lev.user.UserNameComparator;
 
@@ -8,6 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserService implements UserServiceInterface{
+    @Override
+    public User getUser(String login) {
+        User user = new User();
+        try {
+            user = new UserDao().read(login);
+
+        } catch (UserException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
     @Override
     public void updatePassword(String login, String newPassword) {
         try {
@@ -27,5 +40,16 @@ public class UserService implements UserServiceInterface{
         }
         loginsOfUsers.sort(new UserNameComparator());
         return loginsOfUsers;
+    }
+
+    @Override
+    public boolean removeUser(String login) {
+        try {
+            new UserDao().delete(login);
+            return true;
+        } catch (UserException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

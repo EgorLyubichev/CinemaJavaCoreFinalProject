@@ -1,17 +1,27 @@
 package by.lev.service;
 
+import by.lev.exceptions.MovieException;
 import by.lev.exceptions.TicketException;
+import by.lev.movie.MovieDao;
 import by.lev.ticket.Ticket;
 import by.lev.ticket.TicketDao;
 import by.lev.user.User;
-
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import static by.lev.controller.Authorization.USER_ONLINE;
 
 public class TicketService implements TicketServiceInterface {
+    @Override
+    public boolean addTicket(Ticket ticket) {
+        try {
+            new TicketDao().create(ticket);
+            return true;
+        } catch (TicketException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     @Override
     public List<Ticket> getFreeTicketsOfTheSession(int movieID) {
         List<Ticket> freeTickets = new ArrayList<>();
@@ -63,6 +73,17 @@ public class TicketService implements TicketServiceInterface {
             e.printStackTrace();
         }
         return ticketNumbersOfUser;
+    }
+
+    @Override
+    public boolean removeTicket(int movieID) {
+        try {
+            new MovieDao().delete(movieID);
+            return true;
+        } catch (MovieException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
