@@ -272,14 +272,16 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
         }
     }
     public boolean isTheSlotOfThisDateTimeOccuped(String dateTime) throws MovieException {
+        List<Timestamp> timestamps = new ArrayList<>();
         try {
             Connection connection = AbstractConnection.getConnection();
             PreparedStatement prs = connection.prepareStatement("SELECT dateTime FROM movie WHERE dateTime=?");
             prs.setTimestamp(1, Timestamp.valueOf(dateTime));
             ResultSet rs = prs.executeQuery();
-            if (rs.next()) {
-                return true; //Указанная дата уже занята другим сеансом!"
+            while (rs.next()) {
+                timestamps.add(rs.getTimestamp("dateTime"));
             }
+            if (timestamps.isEmpty()){return false;}
         } catch (SQLException e) {
             throw new MovieException(MD_009, MD_009.getMessage(), e);
         } finally {
@@ -289,6 +291,6 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
                 throw new MovieException(MD_009F, MD_009F.getMessage(), e);
             }
         }
-        return false;
+        return true;
     }
 }

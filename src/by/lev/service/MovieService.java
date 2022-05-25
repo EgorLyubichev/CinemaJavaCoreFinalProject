@@ -60,7 +60,7 @@ public class MovieService implements MovieServiceInterface {
         } catch (MovieException e) {
             e.printStackTrace();
         }
-        for (Timestamp timestamp: timestamps) {
+        for (Timestamp timestamp : timestamps) {
             if (timestamp.after(Timestamp.valueOf(LocalDateTime.now()))) {
                 upcomingTimestamps.add(timestamp);
             }
@@ -84,7 +84,7 @@ public class MovieService implements MovieServiceInterface {
     public int getMovieIdOnTheDateTimeRequest(Timestamp timestamp) {
         int result = -1;
         try {
-            result =  new MovieDao().readMovieIdOnTheDateTimeRequest(timestamp);
+            result = new MovieDao().readMovieIdOnTheDateTimeRequest(timestamp);
         } catch (MovieException e) {
             e.printStackTrace();
         }
@@ -142,12 +142,12 @@ public class MovieService implements MovieServiceInterface {
 
     @Override
     public boolean isTheSlotOfThisDateTimeOccuped(String dateTime) {
+        Boolean result = null;
         try {
-            new MovieDao().isTheSlotOfThisDateTimeOccuped(dateTime);
-            return true;
+            result = new MovieDao().isTheSlotOfThisDateTimeOccuped(dateTime);
         } catch (MovieException e) {
             e.printStackTrace();
         }
-        return false;
+        return result;
     }
 }
