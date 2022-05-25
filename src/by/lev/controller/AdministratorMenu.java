@@ -1,11 +1,11 @@
 package by.lev.controller;
 
-import by.lev.service.AdministratorService;
+import by.lev.service.MovieService;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static by.lev.service.ServiceFunction.scanString;
+import static by.lev.controller.InputFunction.scanString;
 
 public class AdministratorMenu extends ManagerMenu{
     public void showAdminMenu() {
@@ -50,29 +50,29 @@ public class AdministratorMenu extends ManagerMenu{
 
         switch (choice) {
             case 1:
-                new AdministratorService().showMovieList();
+                new AdministratorMenuAction().showMovieList();
                 System.out.println();
                 showMovieOperations();
                 break;
             case 2:
-                new AdministratorService().showUpcomingMovies();
+                new AdministratorMenuAction().showUpcomingSessions();
                 System.out.println();
                 showMovieOperations();
                 break;
             case 3:
-                new AdministratorService().changeMovieTitle();
+                new AdministratorMenuAction().changeMovieTitle();
                 showMovieOperations();
                 break;
             case 4:
-                new AdministratorService().changeMovieSession();
+                new AdministratorMenuAction().changeMovieSession();
                 showMovieOperations();
                 break;
             case 5:
-                new AdministratorService().addNewMovieAccount();
+                new AdministratorMenuAction().addNewMovieAccount();
                 showMovieOperations();
                 break;
             case 6:
-                new AdministratorService().deleteMovieAccount();
+                new AdministratorMenuAction().deleteMovieAccount();
                 showAdminMenu();
                 break;
             case 0:
@@ -94,17 +94,17 @@ public class AdministratorMenu extends ManagerMenu{
 
         switch (choice) {
             case 1:
-                new AdministratorService().buyATicketForUser();
+                new AdministratorMenuAction().buyATicketForUser();
                 System.out.println();
                 showTicketOperations();
                 break;
             case 2:
-                new AdministratorService().showUserTickets();
+                new AdministratorMenuAction().showUserTickets();
                 System.out.println();
                 showTicketOperations();
                 break;
             case 3:
-                new AdministratorService().cancelTheTicket();
+                new AdministratorMenuAction().cancelTheTicket();
                 showTicketOperations();
                 break;
             case 0:
@@ -127,11 +127,11 @@ public class AdministratorMenu extends ManagerMenu{
 
         switch (choice) {
             case 1:
-                new AdministratorService().showUserList();
+                new AdministratorMenuAction().showUserList();
                 showUserOperations();
                 break;
             case 2:
-                new AdministratorService().changePassword();
+                new AdministratorMenuAction().changePassword();
                 showUserOperations();
                 break;
             case 3:
@@ -139,7 +139,7 @@ public class AdministratorMenu extends ManagerMenu{
                 showUserOperations();
                 break;
             case 4:
-                new AdministratorService().deleteTheUser();
+                new AdministratorMenuAction().deleteTheUser();
                 showUserOperations();
                 break;
             case 0:

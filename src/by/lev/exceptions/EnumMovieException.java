@@ -15,6 +15,8 @@ public enum EnumMovieException {
     MD_006f("The program couldn't close connection!"),
     MD_007("Don't get the movieID from database."),
     MD_007f("The program couldn't close connection!"),
+    MD_008("Don't get movie titles from database."),
+    MD_008F("The program couldn't close connection!"),
     MIC_01("The app couldn't get dateTime this movie!"),
     UC_01("The app couldn't get dateTime this movie!");
 

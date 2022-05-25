@@ -1,7 +1,5 @@
-package by.lev.service;
+package by.lev.controller;
 
-import by.lev.controller.AdministratorMenu;
-import by.lev.controller.Registration;
 import by.lev.exceptions.UserException;
 import by.lev.service.inputChecks.MovieInputCheck;
 import by.lev.exceptions.MovieException;
@@ -17,9 +15,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import static by.lev.service.ServiceFunction.*;
+import static by.lev.controller.InputFunction.*;
 
-public class AdministratorService extends ManagerService {
+public class AdministratorMenuAction extends ManagerMenuAction {
     Movie movie = new Movie();
 
     public void addNewMovieAccount() {

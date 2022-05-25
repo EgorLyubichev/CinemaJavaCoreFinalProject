@@ -1,12 +1,12 @@
-package by.lev.service;
+package by.lev.controller;
 
-import by.lev.controller.ManagerMenu;
 import by.lev.exceptions.MovieException;
 import by.lev.exceptions.TicketException;
 import by.lev.exceptions.UserException;
 import by.lev.movie.Movie;
 import by.lev.movie.MovieDao;
 import by.lev.movie.MovieDateTimeComporator;
+import by.lev.service.MovieService;
 import by.lev.service.inputChecks.MovieInputCheck;
 import by.lev.ticket.Ticket;
 import by.lev.ticket.TicketDao;
@@ -15,16 +15,15 @@ import by.lev.user.UserDao;
 import by.lev.user.UserNameComparator;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static by.lev.service.ServiceFunction.*;
+import static by.lev.controller.InputFunction.*;
 
-public class ManagerService extends UserService {
+public class ManagerMenuAction extends UserMenuAction {
 
     public void showMovieList() {
-        List<Movie> movieList = new ArrayList<>();
+        List<Movie> movieList;
         try {
             movieList = new MovieDao().readAll();
         } catch (MovieException e) {
@@ -34,19 +33,8 @@ public class ManagerService extends UserService {
         movieList.forEach(System.out::println);
     }
 
-    public void showUpcomingMovies() {
-        List<Movie> movieCollection = new ArrayList<>();
-        try {
-            movieCollection = new MovieDao().readAll();
-        } catch (MovieException e) {
-            e.printStackTrace();
-        }
-        for (Movie movie : movieCollection) {
-            if (movie.getDateTime().after(Timestamp.valueOf(LocalDateTime.now()))) {
-                upcomingMovies.add(movie);
-            }
-        }
-        upcomingMovies.sort(new MovieDateTimeComporator());
+    public void showUpcomingSessions() {
+        List<Movie> upcomingMovies = new MovieService().getUpcomingMovieSession();
         upcomingMovies.forEach(System.out::println);
     }
 

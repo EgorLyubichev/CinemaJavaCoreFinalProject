@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static by.lev.service.ServiceFunction.*;
+import static by.lev.controller.InputFunction.*;
 
 public class Registration {
     User newUser = new User();

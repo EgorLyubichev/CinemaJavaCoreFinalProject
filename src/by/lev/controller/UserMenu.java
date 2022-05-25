@@ -1,6 +1,5 @@
 package by.lev.controller;
 
-import by.lev.service.UserService;
 import by.lev.service.inputChecks.InputCorrectness;
 
 
@@ -25,23 +24,23 @@ public class UserMenu {
         }
         switch (inputValue) {
             case 1:
-                new UserService().showUpcomingMovies();
+                new UserMenuAction().showUpcomingSessions();
                 System.out.println();
                 showUserMenu();
                 break;
             case 2:
-                new UserService.BuyingATicket().buyATicket();
+                new UserMenuAction.BuyingATicket().buyATicket();
                 break;
             case 3:
-                new UserService().showUserTickets();
+                new UserMenuAction().showUserTickets();
                 showUserMenu();
                 break;
             case 4:
-                new UserService().cancelTheTicket();
+                new UserMenuAction().cancelTheTicket();
                 showUserMenu();
                 break;
             case 5:
-                new UserService().changePassword();
+                new UserMenuAction().changePassword();
                 showUserMenu();
                 break;
             case 0:

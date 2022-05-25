@@ -3,7 +3,7 @@ package by.lev.service.inputChecks;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static by.lev.service.ServiceFunction.scanString;
+import static by.lev.controller.InputFunction.scanString;
 
 public class InputCorrectness {
     public int inputCorrectValueFromZeroToFive() {

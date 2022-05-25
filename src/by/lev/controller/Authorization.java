@@ -5,7 +5,7 @@ import by.lev.user.User;
 import by.lev.user.UserDao;
 
 import static by.lev.user.UsersAccessLevel.*;
-import static by.lev.service.ServiceFunction.*;
+import static by.lev.controller.InputFunction.*;
 
 public class Authorization {
 
@@ -34,7 +34,7 @@ public class Authorization {
         }
         if (USER_ONLINE.getLogin() == null) {
             System.out.println("Пользователь с таким логином не зарегистрирован.\n");
-            new Menu().start();
+            new MainMenu().start();
         }
     }
 
@@ -46,7 +46,7 @@ public class Authorization {
     private void checkInputPassword() {
         if (!USER_ONLINE.getPassword().equals(userSEND.getPassword())) {
             System.out.println("Введен неверный пароль.");
-            new Menu().start();
+            new MainMenu().start();
         }
     }
 

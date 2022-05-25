@@ -1,46 +1,30 @@
-package by.lev.service;
+package by.lev.controller;
 
 import static by.lev.controller.Authorization.USER_ONLINE;
 
-import by.lev.controller.Registration;
-import by.lev.controller.UserMenu;
 import by.lev.exceptions.MovieException;
 import by.lev.exceptions.TicketException;
 import by.lev.exceptions.UserException;
 import by.lev.movie.Movie;
 import by.lev.movie.MovieDao;
-import by.lev.movie.MovieDateTimeComporator;
-import by.lev.service.inputChecks.UserInputCheck;
+import by.lev.service.MovieService;
 import by.lev.ticket.Ticket;
 import by.lev.ticket.TicketDao;
 import by.lev.user.UserDao;
 
-import static by.lev.service.ServiceFunction.*;
+import static by.lev.controller.InputFunction.*;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserService {
-    List<Movie> upcomingMovies = new ArrayList<>();
+public class UserMenuAction {
 
-    public void showUpcomingMovies() {
-        List<Movie> movieCollection = new ArrayList<>();
-        try {
-            movieCollection = new MovieDao().readAll();
-        } catch (MovieException e) {
-            e.printStackTrace();
-        }
-        for (Movie movie : movieCollection) {
-            if (movie.getDateTime().after(Timestamp.valueOf(LocalDateTime.now()))) {
-                upcomingMovies.add(movie);
-            }
-        }
-        upcomingMovies.sort(new MovieDateTimeComporator());
-        for (Movie sortMovie : upcomingMovies) {
-            StringBuilder strB = new StringBuilder(sortMovie.getDateTime().toString().substring(0, 16))
-                    .append(" | ").append(sortMovie.getTitle())
+    public void showUpcomingSessions() {
+        List<Movie> upcomingMovies = new MovieService().getUpcomingMovieSession();
+        for (Movie movie : upcomingMovies) {
+            StringBuilder strB = new StringBuilder(movie.getDateTime().toString().substring(0, 16))
+                    .append(" | ").append(movie.getTitle())
                     .append("\n- - - - - - - - - - - - - - - - - -");
             System.out.println(strB);
         }
@@ -62,20 +46,24 @@ public class UserService {
         public void showUpcomingSessionsOfTheMovie() {
             System.out.println("Введите название фильма...");
             String title = scanString();
-            System.out.println("Предстоящие сеансы:");
-            List<Timestamp> movieSessions = new MovieDao().getTheDateTimeOnRequestMovieTitle(title);
-
-            if (movieSessions.isEmpty()) {
-                System.out.println("\tна данный фильм сеансов пока не назначено");
-                new UserMenu().showUserMenu();
-            } else {
-                movie.setTitle(title);
-                int count = 1;
-                for (int i = 0; i < movieSessions.size(); i++, count++) {
-                    System.out.println("<" + count + "> - " + movieSessions.get(i).toString().substring(0, 16));
+            title = title.toUpperCase().trim();
+            if (new MovieService().checkIfTheTitleContainsInTheTitleList(title)){
+                System.out.println("Предстоящие сеансы:");
+                List<Timestamp> movieSessions = new MovieService().getUpcomingTimestampsOfTheMovie(title);
+                if (movieSessions.isEmpty()) {
+                    System.out.println("\tна данный фильм сеансов пока не назначено");
+                } else {
+                    movie.setTitle(title);
+                    int count = 1;
+                    for (int i = 0; i < movieSessions.size(); i++, count++) {
+                        System.out.println("<" + count + "> - " + movieSessions.get(i).toString().substring(0, 16));
+                    }
                 }
+                timestampList = movieSessions;
+            }else{
+                System.out.println("операция прервана: данного названия в списке имеющихся фильмов нет");
+                new UserMenu().showUserMenu();
             }
-            timestampList = movieSessions;
         }
 
         public void showFreeTicketsOfTheSession() {

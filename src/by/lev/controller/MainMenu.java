@@ -3,9 +3,9 @@ package by.lev.controller;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static by.lev.service.ServiceFunction.*;
+import static by.lev.controller.InputFunction.*;
 
-public class Menu {
+public class MainMenu {
     public void start() {
         System.out.println("- - -| CACTUS CINEMA |- - -");
         System.out.println("<1> - ВХОД");

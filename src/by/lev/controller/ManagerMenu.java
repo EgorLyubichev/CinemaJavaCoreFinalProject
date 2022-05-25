@@ -1,11 +1,11 @@
 package by.lev.controller;
 
-import by.lev.service.ManagerService;
+import by.lev.service.MovieService;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static by.lev.service.ServiceFunction.scanString;
+import static by.lev.controller.InputFunction.scanString;
 
 public class ManagerMenu extends UserMenu {
 
@@ -26,37 +26,37 @@ public class ManagerMenu extends UserMenu {
 
         switch (choice) {
             case 1:
-                new ManagerService().showMovieList();
+                new ManagerMenuAction().showMovieList();
                 System.out.println();
                 showManagerMenu();
                 break;
             case 2:
-                new ManagerService().showUpcomingMovies();
+                new ManagerMenuAction().showUpcomingSessions();
                 System.out.println();
                 showManagerMenu();
                 break;
             case 3:
-                new ManagerService().showUserList();
+                new ManagerMenuAction().showUserList();
                 showManagerMenu();
                 break;
             case 4:
-                new ManagerService().buyATicketForUser();
+                new ManagerMenuAction().buyATicketForUser();
                 showManagerMenu();
                 break;
             case 5:
-                new ManagerService().showTheUserTickets();
+                new ManagerMenuAction().showTheUserTickets();
                 showManagerMenu();
                 break;
             case 6:
-                new ManagerService().cancelTheTicket();
+                new ManagerMenuAction().cancelTheTicket();
                 showManagerMenu();
                 break;
             case 7:
-                new ManagerService().changeMovieTitle();
+                new ManagerMenuAction().changeMovieTitle();
                 showManagerMenu();
                 break;
             case 8:
-                new ManagerService().changeMovieSession();
+                new ManagerMenuAction().changeMovieSession();
                 showManagerMenu();
                 break;
             case 0:

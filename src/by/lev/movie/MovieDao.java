@@ -8,7 +8,6 @@ import static by.lev.databaseConnection.AbstractConnection.*;
 import static by.lev.exceptions.EnumMovieException.*;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,6 +115,7 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
         return movies;
     }
 
+
     public boolean update(Integer movieID, String movieTitle) throws MovieException {
         try {
             Connection connection = getConnection();
@@ -184,12 +184,13 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
             prs.setInt(1, movieID);
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
-                Ticket ticket = new Ticket();
-                ticket.setTicketID(rs.getInt("ticketID"));
-                ticket.setUserName(rs.getString("userName"));
-                ticket.setMovieID(rs.getInt("movieID"));
-                ticket.setPlace(rs.getInt("place"));
-                ticket.setCost(rs.getInt("cost"));
+                Ticket ticket = new Ticket(
+                        rs.getInt("ticketID"),
+                        rs.getString("userName"),
+                        rs.getInt("movieID"),
+                        rs.getInt("place"),
+                        rs.getInt("cost")
+                );
                 tickets.add(ticket);
             }
         } catch (SQLException e) {
@@ -199,29 +200,52 @@ public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
     }
 
     @Override
-    public List<Timestamp> getTheDateTimeOnRequestMovieTitle(String title) {
-        List<Timestamp> movieSessions = new ArrayList<>();
+    public List<Timestamp> readTimestampsOfTheMovie(String title) throws MovieException {
+        List<Timestamp> timestamps = new ArrayList<>();
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(SELECT_DATE_TIME_FROM_THE_MOVIE_WHERE_TITLE.getScript());
+            PreparedStatement prs = connection.prepareStatement(
+                    SELECT_DATE_TIME_FROM_THE_MOVIE_WHERE_TITLE.getScript());
             prs.setString(1, title.toUpperCase());
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
                 Timestamp timestamp = rs.getTimestamp("dateTime");
-                if (timestamp.after(Timestamp.valueOf(LocalDateTime.now()))) {
-                    movieSessions.add(timestamp);
-                }
+                timestamps.add(timestamp);
             }
         } catch (SQLException e) {
-            new MovieException(MD_006, MD_006.getMessage(), e);
+            throw new MovieException(MD_006, MD_006.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                new MovieException(MD_006f, MD_006f.getMessage(), e);
+                throw new MovieException(MD_006f, MD_006f.getMessage(), e);
             }
         }
-        return movieSessions;
+        return timestamps;
+    }
+
+    @Override
+    public List<String> readTitles() throws MovieException {
+        List<String> titles = new ArrayList<>();
+        try {
+            Connection connection = getConnection();
+            PreparedStatement prs = connection.prepareStatement(
+                    SELECT_TITLES_OF_MOVIES.getScript());
+            ResultSet rs = prs.executeQuery();
+            while (rs.next()) {
+                String title = rs.getString("movieTitle");
+                titles.add(title);
+            }
+            return titles;
+        } catch (SQLException e) {
+            throw new MovieException(MD_008, MD_008.getMessage(), e);
+        } finally {
+            try {
+                closeConnection();
+            } catch (SQLException e) {
+                throw new MovieException(MD_008F, MD_008F.getMessage(), e);
+            }
+        }
     }
 
     public int getMovieIdOnTheDateTimeRequest(Timestamp dateTime) throws MovieException {

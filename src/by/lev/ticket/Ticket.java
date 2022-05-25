@@ -79,18 +79,22 @@ public class Ticket {
         return bought;
     }
 
-    public String userNameToString(){
-        if (userName == null){
+    public String userNameToString() {
+        if (userName == null) {
             return "не назначен";
-        }return userName;
+        }
+        return userName;
     }
 
 
-    public String boughtToString(){
-        if (bought == false){
+    public String boughtToString() {
+        if (bought == false) {
             return "не приобретен";
-        }return "приобретен";
+        } else {
+            return "приобретен";
+        }
     }
+
     @Override
     public String toString() {
         return "Билет №" + ticketID +

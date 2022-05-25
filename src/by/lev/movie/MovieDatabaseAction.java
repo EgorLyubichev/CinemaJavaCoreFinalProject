@@ -7,7 +7,8 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public interface MovieDatabaseAction<T, R, S> extends CrudOperation<Movie, Integer, String> {
-    List<Timestamp> getTheDateTimeOnRequestMovieTitle(String title);
+    List<Timestamp> readTimestampsOfTheMovie(String title) throws MovieException;
+    List<String> readTitles() throws MovieException;
     boolean update(int movieID, Timestamp newDateTime) throws MovieException;
     int getMovieIdOnTheDateTimeRequest(Timestamp dateTime) throws MovieException;
 
