@@ -1,5 +1,6 @@
 package by.lev.controller;
 
+import by.lev.encoder.Base64encoder;
 import by.lev.exceptions.UserException;
 import by.lev.user.User;
 import by.lev.user.UserDao;
@@ -40,7 +41,9 @@ public class Authorization {
 
     private void inputPassword() {
         System.out.println("Введите ваш пароль...");
-        userSEND.setPassword(scanString());
+        String password = scanString();
+        String passwordCode = new Base64encoder().getEncode(password);
+        userSEND.setPassword(passwordCode);
     }
 
     private void checkInputPassword() {

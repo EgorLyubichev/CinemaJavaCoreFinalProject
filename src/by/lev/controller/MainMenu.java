@@ -18,6 +18,7 @@ public class MainMenu {
                 break;
             case 2:
                 new Registration().createNewUser();
+                start();
                 break;
             case 0:
                 System.exit(0);

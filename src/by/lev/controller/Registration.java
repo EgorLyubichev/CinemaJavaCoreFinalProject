@@ -1,5 +1,6 @@
 package by.lev.controller;
 
+import by.lev.encoder.Base64encoder;
 import by.lev.exceptions.UserException;
 import by.lev.user.User;
 import by.lev.user.UserDao;
@@ -24,6 +25,7 @@ public class Registration {
             throw new RuntimeException(e);
         }
         System.out.println("учетная запись успешно добавлена");
+
     }
 
     public void setCorrectLogin() {
@@ -59,7 +61,7 @@ public class Registration {
         System.out.println("повторите пароль ...");
         String repeatPassword = scanString();
         if (password.equals(repeatPassword)) {
-            newUser.setPassword(password);
+            newUser.setPassword(new Base64encoder().getEncode(password));
         } else {
             System.out.println("введенные пароли не совпадают");
             setCorrectPassword();
