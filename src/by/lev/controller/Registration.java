@@ -1,9 +1,8 @@
 package by.lev.controller;
 
 import by.lev.encoder.Base64encoder;
-import by.lev.exceptions.UserException;
+import by.lev.service.UserService;
 import by.lev.user.User;
-import by.lev.user.UserDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +17,8 @@ public class Registration {
     public void createNewUser() {
         setCorrectLogin();
         setCorrectPassword();
-
-        try {
-            new UserDao().create(newUser);
-        } catch (UserException e) {
-            throw new RuntimeException(e);
-        }
+        new UserService().addUser(newUser);
         System.out.println("учетная запись успешно добавлена");
-
     }
 
     public void setCorrectLogin() {
@@ -36,20 +29,16 @@ public class Registration {
         while (checkTheCorrectnessOfTheLoginInput(login) == false) {
             login = scanString();
         }
-        List<String> userLoginList = new ArrayList<>();
-        try {
-            userLoginList = new UserDao().readUserNameList();
-            for (String username:userLoginList) {
-                username = username.toLowerCase();
-            }
-        } catch (UserException e) {
-            throw new RuntimeException(e);
+        List<String> userLoginList = new UserService().getLoginsOfUsers();
+        List<String> userLoginListToLowwerCase = new ArrayList<>();
+        for (String loginFromDb:userLoginList) {
+            userLoginListToLowwerCase.add(loginFromDb.toLowerCase());
         }
-        if (userLoginList.contains(login.toLowerCase())){
+        if (userLoginListToLowwerCase.contains(login.toLowerCase())) {
             System.out.println("пользователь с таким именем уже существует");
             setCorrectLogin();
         }
-            newUser.setLogin(login);
+        newUser.setLogin(login);
     }
 
     public void setCorrectPassword() {

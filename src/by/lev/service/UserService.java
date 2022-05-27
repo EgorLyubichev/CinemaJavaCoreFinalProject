@@ -10,6 +10,15 @@ import java.util.List;
 
 public class UserService implements UserServiceInterface{
     @Override
+    public void addUser(User user) {
+        try {
+            new UserDao().create(user);
+        } catch (UserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public User getUser(String login) {
         User user = new User();
         try {

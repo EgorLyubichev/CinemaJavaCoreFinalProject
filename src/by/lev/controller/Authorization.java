@@ -1,9 +1,8 @@
 package by.lev.controller;
 
 import by.lev.encoder.Base64encoder;
-import by.lev.exceptions.UserException;
+import by.lev.service.UserService;
 import by.lev.user.User;
-import by.lev.user.UserDao;
 
 import static by.lev.user.UsersAccessLevel.*;
 import static by.lev.controller.InputFunction.*;
@@ -28,11 +27,7 @@ public class Authorization {
     }
 
     private void checkLoginInDatabase() {
-        try {
-            USER_ONLINE = new UserDao().read(userSEND.getLogin());
-        } catch (UserException e) {
-            e.printStackTrace();
-        }
+        USER_ONLINE = new UserService().getUser(userSEND.getLogin());
         if (USER_ONLINE.getLogin() == null) {
             System.out.println("Пользователь с таким логином не зарегистрирован.\n");
             new MainMenu().start();
