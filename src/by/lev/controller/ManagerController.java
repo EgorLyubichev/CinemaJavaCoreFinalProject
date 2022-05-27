@@ -116,7 +116,7 @@ public class ManagerController extends UserController {
         if (userTickets.isEmpty()) {
             System.out.println("у данного пользователя билетов не имеется");
             System.out.println("- - - - - - - - - - - - - - - - - - - - -");
-            new ManagerController().showManagerMenu();
+            showManagerMenu();
         }
         for (Ticket ticket : userTickets) {
             int movieID = ticket.getMovieID();
@@ -148,7 +148,7 @@ public class ManagerController extends UserController {
         if (!userLoginList.contains(login)) {
             System.out.println("Операция прервана: пользователь с таким логином не зарегистрирован!");
             System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-            new ManagerController().showManagerMenu();
+            showManagerMenu();
         }
     }
 
@@ -158,7 +158,7 @@ public class ManagerController extends UserController {
             String username = ticket.getUserName();
             System.out.println("Отказано в доступе: данный билет принадлежит пользователю <" + username + ">");
             System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-            new ManagerController().showManagerMenu();
+            showManagerMenu();
         }
     }
 
@@ -168,7 +168,7 @@ public class ManagerController extends UserController {
             System.out.println("Отказано в доступе: данный билет №" + ticketID +
                     " не принадлежит пользователю <" + username + ">");
             System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-            new ManagerController().showManagerMenu();
+            showManagerMenu();
         }
     }
 
@@ -178,14 +178,14 @@ public class ManagerController extends UserController {
         Movie movie = new MovieService().getMovie(movieID);
         if (movie.getTitle() == null) {
             System.out.println("! - операция прервана: фильма с таким номером в базе не существует!");
-            new ManagerController().showManagerMenu();
+            showManagerMenu();
         }
         System.out.println("фильм: " + movie.getTitle());
         System.out.println("введите новое название фильма...");
         String movieTitle = scanString();
         if (movieTitle.length() < 1 || movieTitle.equals(" ")) {
             System.out.println("! - операция прервана: некорректное название фильма!");
-            new ManagerController().showManagerMenu();
+            showManagerMenu();
         }
         new MovieService().updateTitleOfMovie(movieID, movieTitle.toUpperCase());
         System.out.println("уч.запись №" + movieID + ": название '" + movie.getTitle() + "' успешно заменено на '" + movieTitle.toUpperCase() + "'");
@@ -198,7 +198,7 @@ public class ManagerController extends UserController {
         Movie movie = new MovieService().getMovie(movieID);
         if (movie.getTitle() == null) {
             System.out.println("! - операция прервана: фильма с таким номером в базе не существует!");
-            new ManagerController().showManagerMenu();
+            showManagerMenu();
         }
         System.out.println("фильм: " + movie.getTitle() + " | " + movie.getDateTime().toString().substring(0, 16));
         System.out.println("введите новые дату и время фильма...");

@@ -194,7 +194,7 @@ public class AdministratorController extends ManagerController {
         String title = scanString();
         if (title.length() < 1 || title.equals(" ")) {
             System.out.println("операция прервана: некорректное название фильма");
-            new AdministratorController().showMovieOperations();
+            showMovieOperations();
         }
         movieToLoad.setTitle(title.toUpperCase());
         System.out.println("Введите дату и время показа фильма...");
@@ -209,11 +209,11 @@ public class AdministratorController extends ManagerController {
         movieToLoad.setDateTime(Timestamp.valueOf(sessionDate));
         if (!new MovieService().checkActualityOfTheTime(sessionDate)) {
             System.out.println("операция прервана: данная дата уже прошла");
-            new AdministratorController().showMovieOperations();
+            showMovieOperations();
         }
         if (new MovieService().isTheSlotOfThisDateTimeOccuped(sessionDate)) {
             System.out.println("операция прервана: на данную дату уже запланирован другой сеанс");
-            new AdministratorController().showMovieOperations();
+            showMovieOperations();
         }
         new MovieService().addMovie(movieToLoad);
         movie = new MovieService().getMovie(movieToLoad.getTitle());
@@ -225,7 +225,7 @@ public class AdministratorController extends ManagerController {
         int price = scanInt();
         if (price < 0) {
             System.out.println("операция прервана: указана некорректная цена билета");
-            new AdministratorController().showMovieOperations();
+            showMovieOperations();
         }
         int count = 1;
         for (int i = 0; i < 10; i++, count++) {
@@ -242,7 +242,7 @@ public class AdministratorController extends ManagerController {
         movie = new MovieService().getMovie(movieID);
         if (movie.getTitle() == null) {
             System.out.println("операция прервана: уч.записи с данным номером не найдено");
-            new AdministratorController().showMovieOperations();
+            showMovieOperations();
         }
         new TicketService().removeTicket(movie);
         new MovieService().removeMovie(movieID);
@@ -265,7 +265,7 @@ public class AdministratorController extends ManagerController {
         String repeatPassword = scanString();
         if (!newPassword.equals(repeatPassword)) {
             System.out.println("введенные пароли не совпадают");
-            new AdministratorController().showUserOperations();
+            showUserOperations();
         }
         new UserService().updatePassword(login, newPassword);
         System.out.println("пароль успешно обновлен");
@@ -278,7 +278,7 @@ public class AdministratorController extends ManagerController {
         User user = new UserService().getUser(login);
         if (user.getPassword() == null) {
             System.out.println("операция прервана: пользователя с логином " + login + " в базе нет");
-            new AdministratorController().showUserMenu();
+            showUserMenu();
         }
         new UserService().removeUser(login);
         System.out.println("пользователь " + login + " удален");
@@ -309,7 +309,7 @@ public class AdministratorController extends ManagerController {
         String secondPassword = scanString();
         if (!password.equals(secondPassword)){
             System.out.println("операция прервана: пароли не совпадают");
-            new AdministratorController().showUserOperations();
+            showUserOperations();
         }
         String encodedPassword = new Base64encoder().getEncode(password);
         User manager = new Manager(login, encodedPassword);

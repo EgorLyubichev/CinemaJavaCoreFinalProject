@@ -11,18 +11,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static by.lev.Constant.*;
 import static by.lev.databaseConnection.AbstractConnection.*;
 import static by.lev.exceptions.EnumTicketException.*;
-import static by.lev.databaseConnection.ScriptConstant.*;
 
 public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
     @Override
     public boolean create(Ticket ticket) throws TicketException {
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    "INSERT INTO tickets (userName, movieID, place, cost) VALUES (?,?,?,?)"
-            );
+            PreparedStatement prs = connection.prepareStatement(TICKET_CREATE.getMessage());
             prs.setString(1, ticket.getUserName());
             prs.setInt(2, ticket.getMovieID());
             prs.setInt(3, ticket.getPlace());
@@ -48,8 +46,7 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
         int cost = 0;
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    "SELECT userName, movieID, place, cost FROM tickets WHERE ticketID=?");
+            PreparedStatement prs = connection.prepareStatement(TICKET_READ.getMessage());
             prs.setInt(1, ticketID);
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
@@ -76,7 +73,7 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
         List<Ticket> tickets = new ArrayList<>();
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement("SELECT * FROM tickets");
+            PreparedStatement prs = connection.prepareStatement(TICKET_READ_ALL.getMessage());
             final ResultSet rs = prs.executeQuery();
             while (rs.next()) {
                 int ticketID = rs.getInt("ticketID");
@@ -99,16 +96,12 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
         }
     }
 
-
-    public boolean update(Integer integer, String s) throws TicketException {
-        return false;
-    }
-
-    public List<Ticket> readAll(User user) throws TicketException {
+    @Override
+    public List<Ticket> readTicketListOfTheUser(User user) throws TicketException {
         List<Ticket> userTickets = new ArrayList<>();
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement("SELECT * FROM tickets WHERE userName=?");
+            PreparedStatement prs = connection.prepareStatement(TICKET_READ_TICKETS_OF_THE_USER.getMessage());
             prs.setString(1, user.getLogin());
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
@@ -132,12 +125,12 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
         }
     }
 
+    @Override
     public List<Integer> readTicketNumbersOfTheUser(User user) throws TicketException {
         List<Integer> ticketNumbersList = new ArrayList<>();
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    GET_TICKETS_ID_FROM_TICKETS_BY_THE_USERNAME_REQUEST.getScript());
+            PreparedStatement prs = connection.prepareStatement(TICKET_READ_TICKETS_ID_OF_THE_USER.getMessage());
             prs.setString(1, user.getLogin());
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
@@ -156,31 +149,12 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
         return ticketNumbersList;
     }
 
-    public boolean update(Integer ticketID, Object newPlace) throws TicketException {
+    @Override
+    public boolean deleteUsernameFromTicket(int ticketID) throws TicketException {
         try {
             Connection connection = getConnection();
             PreparedStatement prs = connection.prepareStatement(
-                    "UPDATE tickets SET place=? WHERE ticketID=?");
-            prs.setInt(1, (Integer) newPlace);
-            prs.setInt(2, ticketID);
-            prs.execute();
-            return true;
-        } catch (SQLException e) {
-            throw new TicketException(TD_04, TD_04.getMessage(), e);
-        } finally {
-            try {
-                closeConnection();
-            } catch (SQLException e) {
-                throw new TicketException(TD_04f, TD_04f.getMessage(), e);
-            }
-        }
-    }
-
-    public boolean update(int ticketID) throws TicketException {
-        try {
-            Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    UPDATE_THE_USERNAME_FIELD_INTO_THE_TICKET.getScript());
+                    TICKET_REMOVE_USERNAME_FROM_THE_TICKET.getMessage());
             prs.setString(1, null);
             prs.setInt(2, ticketID);
             prs.execute();
@@ -196,11 +170,12 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
         }
     }
 
-    public boolean update(Integer ticketID, User user) throws TicketException {
+    @Override
+    public boolean setUsernameInTicket(Integer ticketID, User user) throws TicketException {
         try {
             Connection connection = getConnection();
             PreparedStatement prs = connection.prepareStatement(
-                    "UPDATE tickets SET userName=? WHERE ticketID=?");
+                    TICKET_SET_THE_USERNAME_IN_THE_TICKET.getMessage());
             prs.setString(1, user.getLogin());
             prs.setInt(2, ticketID);
             prs.execute();
@@ -220,8 +195,7 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
     public boolean delete(Integer ticketID) throws TicketException {
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    "DELETE FROM tickets WHERE ticketID=?");
+            PreparedStatement prs = connection.prepareStatement(TICKET_DELETE_BY_TICKET_ID.getMessage());
             prs.setInt(1, ticketID);
             prs.execute();
             return true;
@@ -236,11 +210,12 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
         }
     }
 
-    public boolean delete(Movie movie) throws TicketException {
+    @Override
+    public boolean deleteByMovieId(Movie movie) throws TicketException {
         try {
             Connection connection = getConnection();
             PreparedStatement prs = connection.prepareStatement(
-                    "DELETE FROM tickets WHERE movieID=?");
+                    TICKET_DELETE_BY_MOVIE_ID.getMessage());
             prs.setInt(1, movie.getMovieID());
             prs.execute();
             return true;
@@ -260,9 +235,7 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
         List<Ticket> ticketList = new ArrayList<>();
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    GET_ALL_FIELDS_FROM_TICKETS_BY_THE_MOVIEID_REQUEST.getScript()
-            );
+            PreparedStatement prs = connection.prepareStatement(READ_TICKETS_OF_THE_MOVIE.getMessage());
             prs.setInt(1, movieID);
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {

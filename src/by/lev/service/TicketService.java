@@ -46,7 +46,7 @@ public class TicketService implements TicketServiceInterface {
     @Override
     public void assignTheUserInTheTicket(int ticketID, User user) {
         try {
-            new TicketDao().update(ticketID, user);
+            new TicketDao().setUsernameInTicket(ticketID, user);
         } catch (TicketException e) {
             throw new RuntimeException(e);
         }
@@ -56,7 +56,7 @@ public class TicketService implements TicketServiceInterface {
     public List<Ticket> getUserTickets(User user) {
         List<Ticket> userTickets = new ArrayList<>();
         try {
-            userTickets = new TicketDao().readAll(user);
+            userTickets = new TicketDao().readTicketListOfTheUser(user);
         } catch (TicketException e) {
             e.printStackTrace();
         }
@@ -77,7 +77,7 @@ public class TicketService implements TicketServiceInterface {
     @Override
     public boolean removeTicket(Movie movie) {
         try {
-            new TicketDao().delete(movie);
+            new TicketDao().deleteByMovieId(movie);
             return true;
         } catch (TicketException e) {
             e.printStackTrace();
@@ -88,7 +88,7 @@ public class TicketService implements TicketServiceInterface {
     @Override
     public void removeUsernameFromTicket(int ticketID) {
         try {
-            new TicketDao().update(ticketID);
+            new TicketDao().deleteUsernameFromTicket(ticketID);
         } catch (TicketException e) {
             e.printStackTrace();
         }
