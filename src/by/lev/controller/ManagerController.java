@@ -14,7 +14,7 @@ import java.util.List;
 import static by.lev.Constant.INCORRECT_INPUT;
 import static by.lev.controller.InputFunction.*;
 
-public class ManagerController extends UserController {
+public class ManagerController extends UserController implements ManagerControllerInterface{
 
     public void showManagerMenu() {
         System.out.println("- - -|   CACTUS CINEMA    |- - -");

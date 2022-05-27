@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 import static by.lev.controller.InputFunction.*;
 
-public class Registration {
+public class Registration implements RegistrationInterface {
     User newUser = new User();
 
     public void createNewUser() {
@@ -21,7 +21,7 @@ public class Registration {
         System.out.println("учетная запись успешно добавлена");
     }
 
-    public void setCorrectLogin() {
+    private void setCorrectLogin() {
         System.out.println("- - -| CACTUS CINEMA |- - -");
         System.out.println("- - -|  РЕГИСТРАЦИЯ  |- - -");
         System.out.println("введите логин для новой учетной записи: ");
@@ -41,7 +41,7 @@ public class Registration {
         newUser.setLogin(login);
     }
 
-    public void setCorrectPassword() {
+    private void setCorrectPassword() {
         System.out.println("Пароль: ...");
         String password = scanString();
         while (checkTheCorrectnessOfThePasswordInput(password) == false) {

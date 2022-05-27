@@ -7,7 +7,7 @@ import by.lev.user.User;
 import static by.lev.user.UsersAccessLevel.*;
 import static by.lev.controller.InputFunction.*;
 
-public class Authorization {
+public class Authorization implements AuthorizationInterface {
 
     User userSEND = new User();
     public static User USER_ONLINE = new User();

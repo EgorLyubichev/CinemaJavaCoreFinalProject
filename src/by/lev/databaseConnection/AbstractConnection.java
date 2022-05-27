@@ -30,7 +30,7 @@ public abstract class AbstractConnection {
     }
 
     private static Properties getProperties() {
-        File file = new File("src/by/lev/files/databaseConnection.properties");
+        File file = new File("src/by/lev/databaseConnection/databaseConnection.properties");
         Properties properties = new Properties();
         try {
             properties.load(new FileReader(file));

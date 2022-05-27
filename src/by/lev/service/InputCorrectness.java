@@ -6,6 +6,19 @@ import java.util.regex.Pattern;
 import static by.lev.controller.InputFunction.scanString;
 
 public class InputCorrectness {
+    public int inputCorrectValueFromZeroToTwo() {
+        String input = scanString();
+        if (getRightInputFromZeroToTwo(input)) {
+            return Integer.parseInt(input);
+        } else {
+            return -1;
+        }
+    }
+    private boolean getRightInputFromZeroToTwo(String input) {
+        Pattern pattern = Pattern.compile("[0-2]{1}");
+        Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
 
     public int inputCorrectValueFromZeroToThree() {
         String input = scanString();

@@ -1,17 +1,25 @@
 package by.lev.controller;
 
+import by.lev.service.InputCorrectness;
+
+import java.security.Provider;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static by.lev.Constant.INCORRECT_INPUT;
 import static by.lev.controller.InputFunction.*;
 
-public class MainMenu {
+public class MainMenu implements MainMenuInterface {
     public void start() {
         System.out.println("- - -| CACTUS CINEMA |- - -");
         System.out.println("<1> - ВХОД");
         System.out.println("<2> - РЕГИСТРАЦИЯ");
         System.out.println("<0> - ВЫХОД");
-        int value = inputCorrectValueToStart();
+        int value = new InputCorrectness().inputCorrectValueFromZeroToTwo();
+        if (value == -1){
+            System.out.println(INCORRECT_INPUT.getMessage());
+            start();
+        }
         switch (value) {
             case 1:
                 new Authorization().autorization();
@@ -24,22 +32,5 @@ public class MainMenu {
                 System.exit(0);
 
         }
-    }
-
-    public int inputCorrectValueToStart() {
-        String valueString = null;
-        boolean correctness = false;
-        while (correctness == false) {
-            valueString = scanString();
-            Pattern pattern = Pattern.compile("[0-2]{1}");
-            Matcher matcher = pattern.matcher(valueString);
-            if (matcher.matches() == false) {
-                System.out.println("Неверный запрос, повторите попытку.");
-            } else {
-                correctness = true;
-            }
-        }
-        int result = Integer.parseInt(valueString);
-        return result;
     }
 }

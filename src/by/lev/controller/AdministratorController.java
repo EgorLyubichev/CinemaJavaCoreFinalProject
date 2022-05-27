@@ -16,7 +16,7 @@ import java.util.List;
 import static by.lev.Constant.INCORRECT_INPUT;
 import static by.lev.controller.InputFunction.*;
 
-public class AdministratorController extends ManagerController {
+public class AdministratorController extends ManagerController implements AdministratorControllerInterface {
     Movie movie = new Movie();
 
     public void showAdminMenu() {

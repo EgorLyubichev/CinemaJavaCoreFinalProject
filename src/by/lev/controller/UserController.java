@@ -16,7 +16,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserController {
+public class UserController implements UserControllerInterface {
     Movie movie = new Movie();
     Ticket ticket = new Ticket();
     List<Ticket> freeTickets;
@@ -81,7 +81,7 @@ public class UserController {
         buyingTheTicket();
     }
 
-    public void showUpcomingSessionsOfTheMovie() {
+    private void showUpcomingSessionsOfTheMovie() {
         System.out.println("Введите название фильма...");
         String title = scanString();
         title = title.toUpperCase().trim();
@@ -104,7 +104,7 @@ public class UserController {
         }
     }
 
-    public void showFreeTicketsOfTheSession() {
+    private void showFreeTicketsOfTheSession() {
         System.out.println("Выберите сеанс из предложенных...");
         boolean correctInput = false;
         while (!correctInput) {
@@ -135,7 +135,7 @@ public class UserController {
         }
     }
 
-    public void chooseATicket() {
+    private void chooseATicket() {
         List<Integer> freeTicketNumbers = new ArrayList<>();
         for (Ticket freeTicket : freeTickets) {
             freeTicketNumbers.add(freeTicket.getTicketID());
@@ -151,7 +151,7 @@ public class UserController {
         }
     }
 
-    public void buyingTheTicket() {
+    private void buyingTheTicket() {
         System.out.println("Стоимость билета " + ticket.getCost() + "$");
         System.out.println("<1> - оплатить билет\n<2> - вернуться в основное меню");
         int choice = scanInt();
