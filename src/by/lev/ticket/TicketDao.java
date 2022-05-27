@@ -33,7 +33,7 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new TicketException(TD_01f, TD_01f.getMessage(), e);
+                throw new TicketException(TD_01F, TD_01F.getMessage(), e);
             }
         }
     }
@@ -63,7 +63,7 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new TicketException(TD_02f, TD_02f.getMessage(), e);
+                throw new TicketException(TD_02F, TD_02F.getMessage(), e);
             }
         }
     }
@@ -91,7 +91,7 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new TicketException(TD_03f, TD_03f.getMessage(), e);
+                throw new TicketException(TD_03F, TD_03F.getMessage(), e);
             }
         }
     }
@@ -115,12 +115,12 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
             }
             return userTickets;
         } catch (SQLException e) {
-            throw new TicketException(TD_031, TD_031.getMessage(), e);
+            throw new TicketException(TD_04, TD_04.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new TicketException(TD_031f, TD_031f.getMessage(), e);
+                throw new TicketException(TD_04F, TD_04F.getMessage(), e);
             }
         }
     }
@@ -138,12 +138,12 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
                 ticketNumbersList.add(ticketID);
             }
         } catch (SQLException e) {
-            throw new TicketException(TD_031, TD_031.getMessage(), e);
+            throw new TicketException(TD_05, TD_05.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new TicketException(TD_031f, TD_031f.getMessage(), e);
+                throw new TicketException(TD_05F, TD_05F.getMessage(), e);
             }
         }
         return ticketNumbersList;
@@ -160,12 +160,12 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new TicketException(TD_05, TD_05.getMessage(), e);
+            throw new TicketException(TD_06, TD_06.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new TicketException(TD_05f, TD_05f.getMessage(), e);
+                throw new TicketException(TD_06F, TD_06F.getMessage(), e);
             }
         }
     }
@@ -181,12 +181,12 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new TicketException(TD_042, TD_042.getMessage(), e);
+            throw new TicketException(TD_07, TD_07.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new TicketException(TD_042f, TD_042f.getMessage(), e);
+                throw new TicketException(TD_07F, TD_07F.getMessage(), e);
             }
         }
     }
@@ -200,12 +200,12 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new TicketException(TD_05, TD_05.getMessage(), e);
+            throw new TicketException(TD_08, TD_08.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new TicketException(TD_05f, TD_05f.getMessage(), e);
+                throw new TicketException(TD_08F, TD_08F.getMessage(), e);
             }
         }
     }
@@ -220,12 +220,12 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new TicketException(TD_05, TD_05.getMessage(), e);
+            throw new TicketException(TD_09, TD_09.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new TicketException(TD_05f, TD_05f.getMessage(), e);
+                throw new TicketException(TD_09F, TD_09F.getMessage(), e);
             }
         }
     }
@@ -249,12 +249,12 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
                 }
             }
         } catch (SQLException e) {
-            throw new TicketException(TD_06, TD_06.getMessage(), e);
+            throw new TicketException(TD_10, TD_10.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new TicketException(TD_06f, TD_06f.getMessage(), e);
+                throw new TicketException(TD_10F, TD_10F.getMessage(), e);
             }
         }
         return ticketList;

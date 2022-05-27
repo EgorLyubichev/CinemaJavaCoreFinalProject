@@ -1,24 +1,28 @@
 package by.lev.exceptions;
 
+import static by.lev.Constant.COULD_NOT_CLOSE_CONNECTION;
+
 public enum EnumTicketException {
     TD_01("The ticket was not added!"),
-    TD_01f("The program couldn't close connection!"),
-    TD_02("The ticket could not be read!"),
-    TD_02f("The program couldn't close connection!"),
-    TD_03("The ticketList could not be read!"),
-    TD_03f("The program couldn't close connection!"),
-    TD_031("The ticket could not be read!"),
-    TD_031f("The program couldn't close connection!"),
-    TD_04("The ticket could not be updated!"),
-    TD_042("The ticket could not be updated!"),
-    TD_04f("The program couldn't close connection!"),
-    TD_042f("The program couldn't close connection!"),
-    TD_05("The ticket could not be updated!"),
-    TD_05f("The program couldn't close connection!"),
-    TD_06("The ticketList could not be read!"),
-    TD_06f("The program couldn't close connection!"),
-    MSC_01("The app couldn't check movieID from the ticket!"),
-    UC_01("The ticket could not be read!");
+    TD_01F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    TD_02("The ticket couldn't be read!"),
+    TD_02F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    TD_03("The ticketList couldn't be read!"),
+    TD_03F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    TD_04("The tickets could not be read!"),
+    TD_04F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    TD_05("Id of tickets couldn't be read!"),
+    TD_05F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    TD_06("Did not delete username from the ticket"),
+    TD_06F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    TD_07("Didn't set username in the ticket"),
+    TD_07F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    TD_08("Didn't delete the ticket"),
+    TD_08F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    TD_09("Didn't delete tickets with the movie id"),
+    TD_09F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    TD_10("Didn't read ticket list"),
+    TD_10F(COULD_NOT_CLOSE_CONNECTION.getMessage());
 
     private String message;
 
