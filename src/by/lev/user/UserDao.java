@@ -11,26 +11,26 @@ import java.util.List;
 
 import static by.lev.databaseConnection.AbstractConnection.*;
 import static by.lev.exceptions.EnumUserException.*;
+import static by.lev.Constant.*;
 
-public class UserDao implements UserDatabaseAction<User, String> {
+public class UserDao implements UserDaoInterface<User, String> {
     @Override
     public boolean create(User user) throws UserException {
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    "INSERT INTO users (login, password, level) VALUES (?,?,?)");
+            PreparedStatement prs = connection.prepareStatement(USER_CREATE.getMessage());
             prs.setString(1, user.getLogin());
             prs.setString(2, user.getPassword());
             prs.setString(3, user.getLevel().toString());
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new UserException(UD_001, UD_001.getMessage(), e);
+            throw new UserException(UD_01, UD_01.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_001f, UD_001f.getMessage(), e);
+                throw new UserException(UD_01F, UD_01F.getMessage(), e);
             }
         }
     }
@@ -40,8 +40,7 @@ public class UserDao implements UserDatabaseAction<User, String> {
         User user = new User();
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    "SELECT userID, login, password, level FROM users WHERE login=?");
+            PreparedStatement prs = connection.prepareStatement(USER_READ.getMessage());
             prs.setString(1, userName);
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
@@ -52,12 +51,12 @@ public class UserDao implements UserDatabaseAction<User, String> {
             }
             return user;
         } catch (SQLException e) {
-            throw new UserException(UD_002, UD_002.getMessage(), e);
+            throw new UserException(UD_02, UD_02.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_002f, UD_002f.getMessage(), e);
+                throw new UserException(UD_02F, UD_02F.getMessage(), e);
             }
         }
     }
@@ -67,7 +66,7 @@ public class UserDao implements UserDatabaseAction<User, String> {
         List<User> users = new ArrayList<>();
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement("SELECT * FROM users");
+            PreparedStatement prs = connection.prepareStatement(USER_READ_ALL.getMessage());
             final ResultSet rs = prs.executeQuery();
             while (rs.next()) {
                 User user = new User();
@@ -79,56 +78,55 @@ public class UserDao implements UserDatabaseAction<User, String> {
             }
             return users;
         } catch (SQLException e) {
-            throw new UserException(UD_003, UD_003.getMessage(), e);
+            throw new UserException(UD_03, UD_03.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_003f, UD_003f.getMessage(), e);
+                throw new UserException(UD_03F, UD_03F.getMessage(), e);
             }
         }
     }
 
-
+    @Override
     public List<String> readUserNameList() throws UserException {
         List<String> usernames = new ArrayList<>();
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement("SELECT login FROM users");
+            PreparedStatement prs = connection.prepareStatement(USER_READ_ALL_LOGINS.getMessage());
             final ResultSet rs = prs.executeQuery();
             while (rs.next()) {
                 String username = rs.getString("login");
                 usernames.add(username);
             }
         } catch (SQLException e) {
-            throw new UserException(UD_006, UD_006.getMessage(), e);
+            throw new UserException(UD_06, UD_06.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_006f, UD_006f.getMessage(), e);
+                throw new UserException(UD_06F, UD_06F.getMessage(), e);
             }
         }
         return usernames;
     }
 
-
+    @Override
     public boolean update(String login, String newPassword) throws UserException {
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    "UPDATE users SET password=? WHERE login=?");
+            PreparedStatement prs = connection.prepareStatement(USER_UPDATE_PASSWORD.getMessage());
             prs.setString(1, newPassword);
             prs.setString(2, login);
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new UserException(UD_004, UD_004.getMessage(), e);
+            throw new UserException(UD_04, UD_04.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_004f, UD_004f.getMessage(), e);
+                throw new UserException(UD_04F, UD_04F.getMessage(), e);
             }
         }
     }
@@ -137,17 +135,17 @@ public class UserDao implements UserDatabaseAction<User, String> {
     public boolean delete(String login) throws UserException {
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement("DELETE FROM users WHERE login=?");
+            PreparedStatement prs = connection.prepareStatement(USER_DELETE.getMessage());
             prs.setString(1, login);
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new UserException(UD_005, UD_005.getMessage(), e);
+            throw new UserException(UD_05, UD_05.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_005f, UD_005f.getMessage(), e);
+                throw new UserException(UD_05F, UD_05F.getMessage(), e);
             }
         }
     }

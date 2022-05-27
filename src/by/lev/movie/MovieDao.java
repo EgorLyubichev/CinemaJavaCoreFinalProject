@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MovieDao implements MovieDatabaseAction<Movie, Integer, String> {
+public class MovieDao implements MovieDaoInterface<Movie, Integer> {
     @Override
     public boolean create(Movie movie) throws MovieException {
         try {

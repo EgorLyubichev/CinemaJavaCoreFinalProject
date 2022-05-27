@@ -50,11 +50,11 @@ public class Authorization {
 
     private void goToActualMenu() {
         if (USER_ONLINE.getLevel() == USER) {
-            new UserMenu().showUserMenu();
+            new UserController().showUserMenu();
         } else if (USER_ONLINE.getLevel() == MANAGER) {
-            new ManagerMenu().showManagerMenu();
+            new ManagerController().showManagerMenu();
         } else if (USER_ONLINE.getLevel() == ADMINISTRATOR) {
-            new AdministratorMenu().showAdminMenu();
+            new AdministratorController().showAdminMenu();
         }
     }
 }

@@ -18,4 +18,6 @@ public interface MovieServiceInterface {
     void updateDateTimeOfMovie(int movieID, Timestamp newTimestamp);
     void removeMovie(int movieID);
     boolean isTheSlotOfThisDateTimeOccuped(String dateTime);
+    boolean checkActualityOfTheTime(String dateTime);
+    boolean inputCorrectDateTimeFormat(String dateTime);
 }

@@ -1,19 +1,80 @@
 package by.lev.controller;
 
 import by.lev.movie.Movie;
+import by.lev.service.InputCorrectness;
 import by.lev.service.MovieService;
 import by.lev.service.TicketService;
 import by.lev.service.UserService;
-import by.lev.service.inputChecks.MovieInputCheck;
 import by.lev.ticket.Ticket;
 import by.lev.user.User;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+import static by.lev.Constant.INCORRECT_INPUT;
 import static by.lev.controller.InputFunction.*;
 
-public class ManagerMenuAction extends UserMenuAction {
+public class ManagerController extends UserController {
+
+    public void showManagerMenu() {
+        System.out.println("- - -|   CACTUS CINEMA    |- - -");
+        System.out.println("- - -| СТРАНИЦА МЕНЕДЖЕРА |- - -");
+        System.out.println("<1> - посмотреть весь список фильмов");
+        System.out.println("<2> - посмотреть список предстоящих сеансов");
+        System.out.println("<3> - список пользователей");
+        System.out.println("<4> - купить билет для пользователя");
+        System.out.println("<5> - посмотреть купленные билеты пользователя");
+        System.out.println("<6> - отменить билет у пользователя");
+        System.out.println("<7> - редактировать название фильма по номеру учетной записи");
+        System.out.println("<8> - редактировать дату и время сеанса по номеру учетной записи");
+        System.out.println("<0> - выход из программы");
+
+        int inputValue = new InputCorrectness().inputCorrectValueFromZeroToEight();
+        if (inputValue == -1){
+            System.out.println(INCORRECT_INPUT.getMessage());
+            System.out.println();
+            showManagerMenu();
+        }
+
+        switch (inputValue) {
+            case 1:
+                new ManagerController().showMovieList();
+                System.out.println();
+                showManagerMenu();
+                break;
+            case 2:
+                new ManagerController().showUpcomingSessions();
+                System.out.println();
+                showManagerMenu();
+                break;
+            case 3:
+                new ManagerController().showUserList();
+                showManagerMenu();
+                break;
+            case 4:
+                new ManagerController().buyATicketForUser();
+                showManagerMenu();
+                break;
+            case 5:
+                new ManagerController().showTheUserTickets();
+                showManagerMenu();
+                break;
+            case 6:
+                new ManagerController().cancelTheTicket();
+                showManagerMenu();
+                break;
+            case 7:
+                new ManagerController().changeMovieTitle();
+                showManagerMenu();
+                break;
+            case 8:
+                new ManagerController().changeMovieSession();
+                showManagerMenu();
+                break;
+            case 0:
+                System.exit(0);
+        }
+    }
 
     public void showMovieList() {
         List<Movie> movieList = new MovieService().getAllMovies();
@@ -55,7 +116,7 @@ public class ManagerMenuAction extends UserMenuAction {
         if (userTickets.isEmpty()) {
             System.out.println("у данного пользователя билетов не имеется");
             System.out.println("- - - - - - - - - - - - - - - - - - - - -");
-            new ManagerMenu().showManagerMenu();
+            new ManagerController().showManagerMenu();
         }
         for (Ticket ticket : userTickets) {
             int movieID = ticket.getMovieID();
@@ -87,7 +148,7 @@ public class ManagerMenuAction extends UserMenuAction {
         if (!userLoginList.contains(login)) {
             System.out.println("Операция прервана: пользователь с таким логином не зарегистрирован!");
             System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-            new ManagerMenu().showManagerMenu();
+            new ManagerController().showManagerMenu();
         }
     }
 
@@ -97,7 +158,7 @@ public class ManagerMenuAction extends UserMenuAction {
             String username = ticket.getUserName();
             System.out.println("Отказано в доступе: данный билет принадлежит пользователю <" + username + ">");
             System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-            new ManagerMenu().showManagerMenu();
+            new ManagerController().showManagerMenu();
         }
     }
 
@@ -107,7 +168,7 @@ public class ManagerMenuAction extends UserMenuAction {
             System.out.println("Отказано в доступе: данный билет №" + ticketID +
                     " не принадлежит пользователю <" + username + ">");
             System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-            new ManagerMenu().showManagerMenu();
+            new ManagerController().showManagerMenu();
         }
     }
 
@@ -117,14 +178,14 @@ public class ManagerMenuAction extends UserMenuAction {
         Movie movie = new MovieService().getMovie(movieID);
         if (movie.getTitle() == null) {
             System.out.println("! - операция прервана: фильма с таким номером в базе не существует!");
-            new ManagerMenu().showManagerMenu();
+            new ManagerController().showManagerMenu();
         }
         System.out.println("фильм: " + movie.getTitle());
         System.out.println("введите новое название фильма...");
         String movieTitle = scanString();
         if (movieTitle.length() < 1 || movieTitle.equals(" ")) {
             System.out.println("! - операция прервана: некорректное название фильма!");
-            new ManagerMenu().showManagerMenu();
+            new ManagerController().showManagerMenu();
         }
         new MovieService().updateTitleOfMovie(movieID, movieTitle.toUpperCase());
         System.out.println("уч.запись №" + movieID + ": название '" + movie.getTitle() + "' успешно заменено на '" + movieTitle.toUpperCase() + "'");
@@ -137,12 +198,13 @@ public class ManagerMenuAction extends UserMenuAction {
         Movie movie = new MovieService().getMovie(movieID);
         if (movie.getTitle() == null) {
             System.out.println("! - операция прервана: фильма с таким номером в базе не существует!");
-            new ManagerMenu().showManagerMenu();
+            new ManagerController().showManagerMenu();
         }
         System.out.println("фильм: " + movie.getTitle() + " | " + movie.getDateTime().toString().substring(0, 16));
         System.out.println("введите новые дату и время фильма...");
         String movieDateTime = scanString();
-        while (!new MovieInputCheck().inputCorrectDateTimeFormat(movieDateTime)) {
+        while (!new MovieService().inputCorrectDateTimeFormat(movieDateTime)) {
+            System.out.println("Формат даты должен быть: 'гггг-мм-дд чч:мм' или 'гггг-мм-дд чч:мм:сс'");
             movieDateTime = scanString();
         }
         Timestamp newTimestamp = Timestamp.valueOf(correctDateTime(movieDateTime));

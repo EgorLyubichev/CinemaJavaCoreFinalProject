@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MovieService implements MovieServiceInterface {
     @Override
@@ -149,5 +151,27 @@ public class MovieService implements MovieServiceInterface {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    public boolean checkActualityOfTheTime(String dateTime) {
+        Timestamp currentTime = Timestamp.valueOf(LocalDateTime.now());
+        if (Timestamp.valueOf(dateTime).before(currentTime)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean inputCorrectDateTimeFormat(String dateTime) {
+        Pattern pattern = Pattern.compile("[\\d]{4}\\-[\\d]{2}\\-[\\d]{2}\\ [\\d]{2}\\:[\\d]{2}");
+        Matcher matcher = pattern.matcher(dateTime);
+        Pattern pattern2 = Pattern.compile("[\\d]{4}\\-[\\d]{2}\\-[\\d]{2}\\ [\\d]{2}\\:[\\d]{2}\\:[\\d]{2}");
+        Matcher matcher2 = pattern2.matcher(dateTime);
+        if (matcher.matches() || matcher2.matches()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

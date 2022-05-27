@@ -1,8 +1,7 @@
 package by.lev.service;
 
-import by.lev.exceptions.MovieException;
 import by.lev.exceptions.TicketException;
-import by.lev.movie.MovieDao;
+import by.lev.movie.Movie;
 import by.lev.ticket.Ticket;
 import by.lev.ticket.TicketDao;
 import by.lev.user.User;
@@ -76,11 +75,11 @@ public class TicketService implements TicketServiceInterface {
     }
 
     @Override
-    public boolean removeTicket(int movieID) {
+    public boolean removeTicket(Movie movie) {
         try {
-            new MovieDao().delete(movieID);
+            new TicketDao().delete(movie);
             return true;
-        } catch (MovieException e) {
+        } catch (TicketException e) {
             e.printStackTrace();
         }
         return false;

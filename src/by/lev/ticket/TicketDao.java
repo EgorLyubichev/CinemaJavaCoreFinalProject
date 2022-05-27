@@ -15,7 +15,7 @@ import static by.lev.databaseConnection.AbstractConnection.*;
 import static by.lev.exceptions.EnumTicketException.*;
 import static by.lev.databaseConnection.ScriptConstant.*;
 
-public class TicketDao implements TicketDatabaseAction<Ticket, Integer, String> {
+public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
     @Override
     public boolean create(Ticket ticket) throws TicketException {
         try {
@@ -156,8 +156,6 @@ public class TicketDao implements TicketDatabaseAction<Ticket, Integer, String> 
         return ticketNumbersList;
     }
 
-
-
     public boolean update(Integer ticketID, Object newPlace) throws TicketException {
         try {
             Connection connection = getConnection();
@@ -238,12 +236,12 @@ public class TicketDao implements TicketDatabaseAction<Ticket, Integer, String> 
         }
     }
 
-    public boolean delete(int movieID) throws TicketException {
+    public boolean delete(Movie movie) throws TicketException {
         try {
             Connection connection = getConnection();
             PreparedStatement prs = connection.prepareStatement(
                     "DELETE FROM tickets WHERE movieID=?");
-            prs.setInt(1, movieID);
+            prs.setInt(1, movie.getMovieID());
             prs.execute();
             return true;
         } catch (SQLException e) {
