@@ -82,7 +82,7 @@ public class Movie {
         return stb.toString();}
     }
 
-    private String showDateTimeWithoutSeconds(){
+    public String showDateTimeWithoutSeconds(){
         return dateTime.toString().substring(0,16);
     }
 }

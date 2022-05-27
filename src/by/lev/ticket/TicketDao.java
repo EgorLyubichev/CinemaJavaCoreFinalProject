@@ -231,7 +231,31 @@ public class TicketDao implements TicketDaoInterface<Ticket, Integer> {
     }
 
     @Override
-    public List<Ticket> readTicketListFromTicketsByTheMovieIdRequest(int movieID) throws TicketException {
+    public List<Ticket> readAllTicketsOfTheMovie(Connection connection, int movieID) {
+        List<Ticket> tickets = new ArrayList<>();
+        try {
+
+            PreparedStatement prs = connection.prepareStatement("SELECT * FROM tickets WHERE movieID=?");
+            prs.setInt(1, movieID);
+            ResultSet rs = prs.executeQuery();
+            while (rs.next()) {
+                Ticket ticket = new Ticket(
+                        rs.getInt("ticketID"),
+                        rs.getString("userName"),
+                        rs.getInt("movieID"),
+                        rs.getInt("place"),
+                        rs.getInt("cost")
+                );
+                tickets.add(ticket);
+            }
+        } catch (SQLException e) {
+            e.getErrorCode();
+        }
+        return tickets;
+    }
+
+    @Override
+    public List<Ticket> readFreeTicketsOfTheMovie(int movieID) throws TicketException {
         List<Ticket> ticketList = new ArrayList<>();
         try {
             Connection connection = getConnection();

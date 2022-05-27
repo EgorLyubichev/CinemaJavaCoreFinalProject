@@ -1,24 +1,30 @@
 package by.lev.exceptions;
 
+import static by.lev.Constant.COULD_NOT_CLOSE_CONNECTION;
+
 public enum EnumMovieException {
-    MD_001("The movie was not added!"),
-    MD_001f("The program couldn't close connection!"),
-    MD_002("The movie couldn't be read!"),
-    MD_002f("The program couldn't close connection!"),
-    MD_003("Movies couldn't be read!"),
-    MD_003f("The program couldn't close connection!"),
-    MD_004("The movie couldn't be updated!"),
-    MD_004f("The program couldn't close connection!"),
-    MD_005("The movie couldn't be deleted!"),
-    MD_005f("The program couldn't close connection!"),
-    MD_006("Don't get a dateTime from database."),
-    MD_006f("The program couldn't close connection!"),
-    MD_007("Don't get the movieID from database."),
-    MD_007f("The program couldn't close connection!"),
-    MD_008("Don't get movie titles from database."),
-    MD_008F("The program couldn't close connection!"),
-    MD_009("The app couldn't get dateTime this movie!"),
-    MD_009F("The program couldn't close connection!");
+    MD_01("The movie was not added!"),
+    MD_01F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    MD_02("The movie couldn't be read!"),
+    MD_02F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    MD_03("Movie couldn't be read!"),
+    MD_03F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    MD_04("Movie list couldn't be read"),
+    MD_04F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    MD_05("Didn't update title"),
+    MD_05F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    MD_06("Didn't update timestamp"),
+    MD_06F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    MD_07("Didn't delete movie"),
+    MD_07F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    MD_08("Didn't read timestamp"),
+    MD_08F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    MD_09("Didn't read title"),
+    MD_09F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    MD_10("Didn't read movie id"),
+    MD_10F(COULD_NOT_CLOSE_CONNECTION.getMessage()),
+    MD_11("Didn't check slot of timestamp"),
+    MD_11F(COULD_NOT_CLOSE_CONNECTION.getMessage());
 
     private String message;
 

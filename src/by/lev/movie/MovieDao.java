@@ -2,9 +2,9 @@ package by.lev.movie;
 
 import by.lev.databaseConnection.AbstractConnection;
 import by.lev.exceptions.MovieException;
-import by.lev.ticket.Ticket;
+import by.lev.ticket.TicketDao;
 
-import static by.lev.databaseConnection.ScriptConstant.*;
+import static by.lev.Constant.*;
 import static by.lev.databaseConnection.AbstractConnection.*;
 import static by.lev.exceptions.EnumMovieException.*;
 
@@ -18,20 +18,19 @@ public class MovieDao implements MovieDaoInterface<Movie, Integer> {
     public boolean create(Movie movie) throws MovieException {
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    "INSERT INTO movie (movieTitle, dateTime) VALUES (?,?)");
+            PreparedStatement prs = connection.prepareStatement(MOVIE_CREATE.getMessage());
             prs.setString(1, movie.getTitle());
             prs.setTimestamp(2, movie.getDateTime());
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new MovieException(MD_001, MD_001.getMessage(), e);
+            throw new MovieException(MD_01, MD_01.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (
                     SQLException e) {
-                throw new MovieException(MD_001f, MD_001f.getMessage(), e);
+                throw new MovieException(MD_01F, MD_01F.getMessage(), e);
             }
         }
     }
@@ -41,50 +40,49 @@ public class MovieDao implements MovieDaoInterface<Movie, Integer> {
         Movie movie = new Movie();
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    "SELECT * FROM movie WHERE movieID=?");
+            PreparedStatement prs = connection.prepareStatement(MOVIE_READ_BY_MOVIE_ID.getMessage());
             prs.setInt(1, movieID);
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
                 movie.setMovieID(rs.getInt("movieID"));
                 movie.setTitle(rs.getString("movieTitle"));
                 movie.setDateTime(rs.getTimestamp("dateTime"));
-                movie.setTicketList(getMovieTickets(connection, movieID));
+                movie.setTicketList(new TicketDao().readAllTicketsOfTheMovie(connection, movieID));
             }
             return movie;
         } catch (SQLException e) {
-            throw new MovieException(MD_002, MD_002.getMessage(), e);
+            throw new MovieException(MD_02, MD_02.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_002f, MD_002f.getMessage(), e);
+                throw new MovieException(MD_02F, MD_02F.getMessage(), e);
             }
         }
     }
 
+    @Override
     public Movie read(String title) throws MovieException {
         Movie movie = new Movie();
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    "SELECT * FROM movie WHERE movieTitle=?");
+            PreparedStatement prs = connection.prepareStatement(MOVIE_READ_BY_TITLE.getMessage());
             prs.setString(1, title);
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
                 movie.setMovieID(rs.getInt("movieID"));
                 movie.setTitle(rs.getString("movieTitle"));
                 movie.setDateTime(rs.getTimestamp("dateTime"));
-                movie.setTicketList(getMovieTickets(connection, movie.getMovieID()));
+                movie.setTicketList(new TicketDao().readAllTicketsOfTheMovie(connection, movie.getMovieID()));
             }
             return movie;
         } catch (SQLException e) {
-            throw new MovieException(MD_002, MD_002.getMessage(), e);
+            throw new MovieException(MD_03, MD_03.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_002f, MD_002f.getMessage(), e);
+                throw new MovieException(MD_03F, MD_03F.getMessage(), e);
             }
         }
     }
@@ -94,66 +92,64 @@ public class MovieDao implements MovieDaoInterface<Movie, Integer> {
         List<Movie> movies = new ArrayList<>();
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement("SELECT * FROM movie");
+            PreparedStatement prs = connection.prepareStatement(MOVIE_READ_ALL.getMessage());
             final ResultSet rs = prs.executeQuery();
             while (rs.next()) {
                 Movie movie = new Movie();
                 movie.setMovieID(rs.getInt("movieID"));
                 movie.setTitle(rs.getString("movieTitle"));
                 movie.setDateTime(rs.getTimestamp("dateTime"));
-                movie.setTicketList(getMovieTickets(connection, movie.getMovieID()));
+                movie.setTicketList(new TicketDao().readAllTicketsOfTheMovie(connection, movie.getMovieID()));
                 movies.add(movie);
             }
         } catch (SQLException e) {
-            throw new MovieException(MD_003, MD_003.getMessage(), e);
+            throw new MovieException(MD_04, MD_04.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_003f, MD_003f.getMessage(), e);
+                throw new MovieException(MD_04F, MD_04F.getMessage(), e);
             }
         }
         return movies;
     }
 
-
+    @Override
     public boolean update(Integer movieID, String movieTitle) throws MovieException {
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    "UPDATE movie SET movieTitle=? WHERE movieID=?");
+            PreparedStatement prs = connection.prepareStatement(MOVIE_UPDATE_TITLE.getMessage());
             prs.setString(1, movieTitle);
             prs.setInt(2, movieID);
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new MovieException(MD_05, MD_05.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new MovieException(MD_05F, MD_05F.getMessage(), e);
             }
         }
     }
 
-
+    @Override
     public boolean update(int movieID, Timestamp newTimestamp) throws MovieException {
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    "UPDATE movie SET dateTime=? WHERE movieID=?");
+            PreparedStatement prs = connection.prepareStatement(MOVIE_UPDATE_TIMESTAMP.getMessage());
             prs.setTimestamp(1, newTimestamp);
             prs.setInt(2, movieID);
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new MovieException(MD_004, MD_004.getMessage(), e);
+            throw new MovieException(MD_06, MD_06.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_004f, MD_004f.getMessage(), e);
+                throw new MovieException(MD_06F, MD_06F.getMessage(), e);
             }
         }
     }
@@ -162,42 +158,19 @@ public class MovieDao implements MovieDaoInterface<Movie, Integer> {
     public boolean delete(Integer movieID) throws MovieException {
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement("DELETE FROM movie WHERE movieID=?");
+            PreparedStatement prs = connection.prepareStatement(MOVIE_DELETE.getMessage());
             prs.setInt(1, movieID);
             prs.execute();
             return true;
         } catch (SQLException e) {
-            throw new MovieException(MD_005, MD_005.getMessage(), e);
+            throw new MovieException(MD_07, MD_07.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_005f, MD_005f.getMessage(), e);
+                throw new MovieException(MD_07F, MD_07F.getMessage(), e);
             }
         }
-    }
-
-    public List<Ticket> getMovieTickets(Connection connection, int movieID) {
-        List<Ticket> tickets = new ArrayList<>();
-        try {
-
-            PreparedStatement prs = connection.prepareStatement("SELECT * FROM tickets WHERE movieID=?");
-            prs.setInt(1, movieID);
-            ResultSet rs = prs.executeQuery();
-            while (rs.next()) {
-                Ticket ticket = new Ticket(
-                        rs.getInt("ticketID"),
-                        rs.getString("userName"),
-                        rs.getInt("movieID"),
-                        rs.getInt("place"),
-                        rs.getInt("cost")
-                );
-                tickets.add(ticket);
-            }
-        } catch (SQLException e) {
-            e.getErrorCode();
-        }
-        return tickets;
     }
 
     @Override
@@ -206,7 +179,7 @@ public class MovieDao implements MovieDaoInterface<Movie, Integer> {
         try {
             Connection connection = getConnection();
             PreparedStatement prs = connection.prepareStatement(
-                    SELECT_DATE_TIME_FROM_THE_MOVIE_WHERE_TITLE.getScript());
+                    MOVIE_READ_TIMESTAMP_LIST_OF_THE_MOVIE.getMessage());
             prs.setString(1, title.toUpperCase());
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
@@ -214,12 +187,12 @@ public class MovieDao implements MovieDaoInterface<Movie, Integer> {
                 timestamps.add(timestamp);
             }
         } catch (SQLException e) {
-            throw new MovieException(MD_006, MD_006.getMessage(), e);
+            throw new MovieException(MD_08, MD_08.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_006f, MD_006f.getMessage(), e);
+                throw new MovieException(MD_08F, MD_08F.getMessage(), e);
             }
         }
         return timestamps;
@@ -230,8 +203,7 @@ public class MovieDao implements MovieDaoInterface<Movie, Integer> {
         List<String> titles = new ArrayList<>();
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    SELECT_TITLES_OF_MOVIES.getScript());
+            PreparedStatement prs = connection.prepareStatement(MOVIE_READ_TITLES.getMessage());
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
                 String title = rs.getString("movieTitle");
@@ -239,21 +211,21 @@ public class MovieDao implements MovieDaoInterface<Movie, Integer> {
             }
             return titles;
         } catch (SQLException e) {
-            throw new MovieException(MD_008, MD_008.getMessage(), e);
+            throw new MovieException(MD_09, MD_09.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_008F, MD_008F.getMessage(), e);
+                throw new MovieException(MD_09F, MD_09F.getMessage(), e);
             }
         }
     }
 
+    @Override
     public int readMovieIdOnTheDateTimeRequest(Timestamp dateTime) throws MovieException {
         try {
             Connection connection = getConnection();
-            PreparedStatement prs = connection.prepareStatement(
-                    "SELECT movieID FROM movie WHERE dateTime=?");
+            PreparedStatement prs = connection.prepareStatement(MOVIE_READ_MOVIE_ID_WHERE_TIMESTAMP.getMessage());
             prs.setTimestamp(1, dateTime);
             ResultSet rs1 = prs.executeQuery();
             if (rs1.next()) {
@@ -262,20 +234,22 @@ public class MovieDao implements MovieDaoInterface<Movie, Integer> {
                 return -1;
             }
         } catch (SQLException e) {
-            throw new MovieException(MD_007, MD_007.getMessage(), e);
+            throw new MovieException(MD_10, MD_10.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_007f, MD_007f.getMessage(), e);
+                throw new MovieException(MD_10F, MD_10F.getMessage(), e);
             }
         }
     }
+
+    @Override
     public boolean isTheSlotOfThisDateTimeOccuped(String dateTime) throws MovieException {
         List<Timestamp> timestamps = new ArrayList<>();
         try {
             Connection connection = AbstractConnection.getConnection();
-            PreparedStatement prs = connection.prepareStatement("SELECT dateTime FROM movie WHERE dateTime=?");
+            PreparedStatement prs = connection.prepareStatement(MOVIE_READ_TIMESTAMP_WHERE_THE_TIMESTAMP.getMessage());
             prs.setTimestamp(1, Timestamp.valueOf(dateTime));
             ResultSet rs = prs.executeQuery();
             while (rs.next()) {
@@ -283,12 +257,12 @@ public class MovieDao implements MovieDaoInterface<Movie, Integer> {
             }
             if (timestamps.isEmpty()){return false;}
         } catch (SQLException e) {
-            throw new MovieException(MD_009, MD_009.getMessage(), e);
+            throw new MovieException(MD_11, MD_11.getMessage(), e);
         } finally {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new MovieException(MD_009F, MD_009F.getMessage(), e);
+                throw new MovieException(MD_11F, MD_11F.getMessage(), e);
             }
         }
         return true;

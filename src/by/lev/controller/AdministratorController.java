@@ -185,7 +185,7 @@ public class AdministratorController extends ManagerController {
         createNewMovie();
         createMovieTickets();
         System.out.println("уч.запись для фильма '" + movie.getTitle().toUpperCase() +
-                "' на дату " + movie.getDateTime().toString() + " со списком билетов успешно добавлена");
+                "' на дату " + movie.showDateTimeWithoutSeconds() + " со списком билетов успешно добавлена");
     }
 
     public void createNewMovie() {
@@ -246,7 +246,9 @@ public class AdministratorController extends ManagerController {
         }
         new TicketService().removeTicket(movie);
         new MovieService().removeMovie(movieID);
-        System.out.println("уч.запись №" + movieID + " удалена");
+        System.out.println("уч.запись №" + movieID + " (фильм: " + movie.getTitle() +
+                " " + movie.showDateTimeWithoutSeconds() + ") удалена");
+        System.out.println("- - - - - - - - - - - - - - - - - - - - - - - -");
     }
 
     public void changePassword() {

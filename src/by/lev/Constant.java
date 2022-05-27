@@ -25,7 +25,21 @@ public enum Constant {
     TICKET_SET_THE_USERNAME_IN_THE_TICKET("UPDATE tickets SET userName=? WHERE ticketID=?"),
     TICKET_DELETE_BY_TICKET_ID("DELETE FROM tickets WHERE ticketID=?"),
     TICKET_DELETE_BY_MOVIE_ID("DELETE FROM tickets WHERE movieID=?"),
-    READ_TICKETS_OF_THE_MOVIE("SELECT * FROM tickets WHERE movieID=?");
+    READ_TICKETS_OF_THE_MOVIE("SELECT * FROM tickets WHERE movieID=?"),
+
+    //MovieDao
+    MOVIE_CREATE("INSERT INTO movie (movieTitle, dateTime) VALUES (?,?)"),
+    MOVIE_READ_BY_MOVIE_ID("SELECT * FROM movie WHERE movieID=?"),
+    MOVIE_READ_BY_TITLE("SELECT * FROM movie WHERE movieTitle=?"),
+    MOVIE_READ_ALL("SELECT * FROM movie"),
+    MOVIE_UPDATE_TITLE("UPDATE movie SET movieTitle=? WHERE movieID=?"),
+    MOVIE_UPDATE_TIMESTAMP("UPDATE movie SET dateTime=? WHERE movieID=?"),
+    MOVIE_DELETE("DELETE FROM movie WHERE movieID=?"),
+    MOVIE_READ_TIMESTAMP_LIST_OF_THE_MOVIE("SELECT dateTime FROM movie WHERE movieTitle=?"),
+    MOVIE_READ_TITLES("SELECT movieTitle FROM movie"),
+    MOVIE_READ_MOVIE_ID_WHERE_TIMESTAMP("SELECT movieID FROM movie WHERE dateTime=?"),
+    MOVIE_READ_TIMESTAMP_WHERE_THE_TIMESTAMP("SELECT dateTime FROM movie WHERE dateTime=?")
+    ;
 
     private String message;
 

@@ -25,7 +25,7 @@ public class TicketService implements TicketServiceInterface {
     public List<Ticket> getFreeTicketsOfTheSession(int movieID) {
         List<Ticket> freeTickets = new ArrayList<>();
         try {
-            freeTickets = new TicketDao().readTicketListFromTicketsByTheMovieIdRequest(movieID);
+            freeTickets = new TicketDao().readFreeTicketsOfTheMovie(movieID);
         } catch (TicketException e) {
             e.printStackTrace();
         }
