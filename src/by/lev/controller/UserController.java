@@ -1,22 +1,33 @@
 package by.lev.controller;
 
 import static by.lev.Constant.INCORRECT_INPUT;
-import static by.lev.controller.Authorization.USER_ONLINE;
+import static by.lev.controller.Entrance.USER_ONLINE;
 
+import by.lev.encoder.Base64encoder;
 import by.lev.movie.Movie;
-import by.lev.service.InputCorrectness;
-import by.lev.service.MovieService;
-import by.lev.service.TicketService;
-import by.lev.service.UserService;
+import by.lev.service.*;
 import by.lev.ticket.Ticket;
 
 import static by.lev.controller.InputFunction.*;
+import static by.lev.logger.Logger.*;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserController implements UserControllerInterface {
+    protected UserServiceInterface usServ;
+    protected TicketServiceInterface tickServ;
+    protected MovieServiceInterface movServ;
+
+    public UserController(UserServiceInterface usServ,
+                          TicketServiceInterface tickServ,
+                          MovieServiceInterface movServ) {
+        this.usServ = usServ;
+        this.tickServ = tickServ;
+        this.movServ = movServ;
+    }
+
     Movie movie = new Movie();
     Ticket ticket = new Ticket();
     List<Ticket> freeTickets;
@@ -60,18 +71,20 @@ public class UserController implements UserControllerInterface {
                 showUserMenu();
                 break;
             case 0:
+                writeUserExit();
                 System.exit(0);
         }
     }
 
     public void showUpcomingSessions() {
-        List<Movie> upcomingMovies = new MovieService().getUpcomingMovies();
+        List<Movie> upcomingMovies = movServ.getUpcomingMovies();
         for (Movie movie : upcomingMovies) {
             StringBuilder strB = new StringBuilder(movie.getDateTime().toString().substring(0, 16))
                     .append(" | ").append(movie.getTitle())
                     .append("\n- - - - - - - - - - - - - - - - - -");
             System.out.println(strB);
         }
+        writeUserAction("showUpcomingSessions");
     }
 
     public void buyATicket() {
@@ -85,9 +98,9 @@ public class UserController implements UserControllerInterface {
         System.out.println("Введите название фильма...");
         String title = scanString();
         title = title.toUpperCase().trim();
-        if (new MovieService().checkIfTitleListContainsTheTitle(title)) {
+        if (movServ.checkIfTitleListContainsTheTitle(title)) {
             System.out.println("Предстоящие сеансы:");
-            List<Timestamp> movieSessions = new MovieService().getUpcomingTimestampsOfTheMovie(title);
+            List<Timestamp> movieSessions = movServ.getUpcomingTimestampsOfTheMovie(title);
             if (movieSessions.isEmpty()) {
                 System.out.println("\tна данный фильм сеансов пока не назначено");
             } else {
@@ -118,8 +131,8 @@ public class UserController implements UserControllerInterface {
             }
         }
         System.out.println("Имеющиеся билеты:");
-        movie.setMovieID(new MovieService().getMovieIdOnTheDateTimeRequest(movie.getDateTime()));
-        freeTickets = new TicketService().getFreeTicketsOfTheSession(movie.getMovieID());
+        movie.setMovieID(movServ.getMovieIdOnTheDateTimeRequest(movie.getDateTime()));
+        freeTickets = tickServ.getFreeTicketsOfTheSession(movie.getMovieID());
         if (freeTickets.isEmpty()) {
             System.out.println("\tк сожалению, на данный сеанс свободных билетов не осталось");
             showUserMenu();
@@ -143,7 +156,7 @@ public class UserController implements UserControllerInterface {
         System.out.println("Выберите нужный билет... (№ билета)");
         int choice = scanInt();
         if (freeTicketNumbers.contains(choice)) {
-            ticket = new TicketService().getTicket(choice);
+            ticket = tickServ.getTicket(choice);
             System.out.println("Билет " + ticket.getTicketID() + " выбран!");
         } else {
             System.out.println("Неверный ввод данных");
@@ -157,8 +170,9 @@ public class UserController implements UserControllerInterface {
         int choice = scanInt();
         switch (choice) {
             case 1:
-                new TicketService().assignTheUserInTheTicket(ticket.getTicketID(), USER_ONLINE);
+                tickServ.assignTheUserInTheTicket(ticket.getTicketID(), USER_ONLINE);
                 System.out.println("Билет оплачен!");
+                writeBuyingATicketOfTheUser(ticket.getTicketID());
                 System.out.println("<1> - купить новый билет\n<2> - перейти в основное меню");
                 boolean inputCorrect = false;
                 while (!inputCorrect) {
@@ -186,10 +200,10 @@ public class UserController implements UserControllerInterface {
     public void showUserTickets() {
         List<Ticket> userTickets;
         Movie movie;
-        userTickets = new TicketService().getUserTickets(USER_ONLINE);
+        userTickets = tickServ.getUserTickets(USER_ONLINE);
         for (Ticket ticket : userTickets) {
             int movieID = ticket.getMovieID();
-            movie = new MovieService().getMovie(movieID);
+            movie = movServ.getMovie(movieID);
             StringBuilder strB = new StringBuilder("Билет № ");
             strB.append(ticket.getTicketID()).append(" | ").append(movie.getTitle()).append(" | ")
                     .append(movie.getDateTime().toString().substring(0, 16)).append(" | владелец: ")
@@ -197,10 +211,11 @@ public class UserController implements UserControllerInterface {
                     .append(" | цена: ").append(ticket.getCost()).append("$");
             System.out.println(strB);
         }
+        writeUserAction("showUserTickets");
     }
 
-    public boolean checkTicketNumberInTheUserCollection(int ticketID) {
-        List<Integer> userTicketIdList = new TicketService().getTicketNumbersOfUser(USER_ONLINE);
+    private boolean checkTicketNumberInTheUserCollection(int ticketID) {
+        List<Integer> userTicketIdList = tickServ.getTicketNumbersOfUser(USER_ONLINE);
         if (userTicketIdList.contains(ticketID)) {
             return true;
         }
@@ -213,7 +228,8 @@ public class UserController implements UserControllerInterface {
         System.out.println("Введите номер билета для отмены...");
         int choice = scanInt();
         if (checkTicketNumberInTheUserCollection(choice)) {
-            new TicketService().removeUsernameFromTicket(choice);
+            tickServ.removeUsernameFromTicket(choice);
+            writeCancellingOfTheUserTicket(choice);
             System.out.println("Ваш запрос выполнен!");
         } else {
             System.out.println("Введенного номера билета в списке ваших не имеется!");
@@ -225,15 +241,17 @@ public class UserController implements UserControllerInterface {
     }
 
     public void changePassword() {
+        writeUserAction("changePassword entrance");
         System.out.println("введите свой пароль...");
         String oldPassword = scanString();
-        if (!USER_ONLINE.getPassword().equals(oldPassword)) {
+        String encodeOldPassword = new Base64encoder().getEncode(oldPassword);
+        if (!USER_ONLINE.getPassword().equals(encodeOldPassword)) {
             System.out.println("в операции отказано: вы ввели неверный пароль");
             showUserMenu();
         }
         System.out.println("введите новый пароль...");
         String newPassword = scanString();
-        while (!new Registration().checkTheCorrectnessOfThePasswordInput(newPassword)) {
+        while (!checkTheCorrectnessOfThePasswordInput(newPassword)) {
             newPassword = scanString();
         }
         System.out.println("повторите пароль...");
@@ -242,7 +260,9 @@ public class UserController implements UserControllerInterface {
             System.out.println("введенные пароли не совпадают");
             showUserMenu();
         }
-        new UserService().updatePassword(USER_ONLINE.getLogin(), newPassword);
+        String encodeNewPassword = new Base64encoder().getEncode(newPassword);
+        usServ.updatePassword(USER_ONLINE.getLogin(), encodeNewPassword);
         System.out.println("пароль успешно обновлен");
+        writeUserAction("changePassword, true, exit");
     }
 }

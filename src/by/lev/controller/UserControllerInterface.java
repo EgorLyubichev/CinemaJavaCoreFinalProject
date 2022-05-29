@@ -5,7 +5,7 @@ public interface UserControllerInterface {
     void showUpcomingSessions();
     void buyATicket();
     void showUserTickets();
-    boolean checkTicketNumberInTheUserCollection(int ticketID);
+    //boolean checkTicketNumberInTheUserCollection(int ticketID);
     void cancelTheTicket();
     void changePassword();
 }

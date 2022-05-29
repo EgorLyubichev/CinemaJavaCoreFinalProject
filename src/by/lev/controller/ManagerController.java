@@ -1,10 +1,7 @@
 package by.lev.controller;
 
 import by.lev.movie.Movie;
-import by.lev.service.InputCorrectness;
-import by.lev.service.MovieService;
-import by.lev.service.TicketService;
-import by.lev.service.UserService;
+import by.lev.service.*;
 import by.lev.ticket.Ticket;
 import by.lev.user.User;
 
@@ -15,6 +12,11 @@ import static by.lev.Constant.INCORRECT_INPUT;
 import static by.lev.controller.InputFunction.*;
 
 public class ManagerController extends UserController implements ManagerControllerInterface{
+
+
+    public ManagerController(UserServiceInterface usServ, TicketServiceInterface tickServ, MovieServiceInterface movServ) {
+        super(usServ, tickServ, movServ);
+    }
 
     public void showManagerMenu() {
         System.out.println("- - -|   CACTUS CINEMA    |- - -");
@@ -38,37 +40,37 @@ public class ManagerController extends UserController implements ManagerControll
 
         switch (inputValue) {
             case 1:
-                new ManagerController().showMovieList();
+                showMovieList();
                 System.out.println();
                 showManagerMenu();
                 break;
             case 2:
-                new ManagerController().showUpcomingSessions();
+                showUpcomingSessions();
                 System.out.println();
                 showManagerMenu();
                 break;
             case 3:
-                new ManagerController().showUserList();
+                showUserList();
                 showManagerMenu();
                 break;
             case 4:
-                new ManagerController().buyATicketForUser();
+                buyATicketForUser();
                 showManagerMenu();
                 break;
             case 5:
-                new ManagerController().showTheUserTickets();
+                showTheUserTickets();
                 showManagerMenu();
                 break;
             case 6:
-                new ManagerController().cancelTheTicket();
+                cancelTheTicket();
                 showManagerMenu();
                 break;
             case 7:
-                new ManagerController().changeMovieTitle();
+                changeMovieTitle();
                 showManagerMenu();
                 break;
             case 8:
-                new ManagerController().changeMovieSession();
+                changeMovieSession();
                 showManagerMenu();
                 break;
             case 0:
@@ -77,17 +79,17 @@ public class ManagerController extends UserController implements ManagerControll
     }
 
     public void showMovieList() {
-        List<Movie> movieList = new MovieService().getAllMovies();
+        List<Movie> movieList = movServ.getAllMovies();
         movieList.forEach(System.out::println);
     }
 
     public void showUpcomingSessions() {
-        List<Movie> upcomingMovies = new MovieService().getUpcomingMovies();
+        List<Movie> upcomingMovies = movServ.getUpcomingMovies();
         upcomingMovies.forEach(System.out::println);
     }
 
     public void showUserList() {
-        List<String> usernames = new UserService().getLoginsOfUsers();
+        List<String> usernames = usServ.getLoginsOfUsers();
         usernames.forEach(System.out::println);
         System.out.println();
     }
@@ -101,7 +103,7 @@ public class ManagerController extends UserController implements ManagerControll
         checkIfTheTicketIsFree(ticketID);
         User user = new User();
         user.setLogin(login);
-        new TicketService().assignTheUserInTheTicket(ticketID, user);
+        tickServ.assignTheUserInTheTicket(ticketID, user);
         System.out.println("билет № " + ticketID + " для пользователя <" + login + "> приобретён");
         System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
     }
@@ -112,7 +114,7 @@ public class ManagerController extends UserController implements ManagerControll
         checkLoginInBase(login);
         User user = new User();
         user.setLogin(login);
-        List<Ticket> userTickets = new TicketService().getUserTickets(user);
+        List<Ticket> userTickets = tickServ.getUserTickets(user);
         if (userTickets.isEmpty()) {
             System.out.println("у данного пользователя билетов не имеется");
             System.out.println("- - - - - - - - - - - - - - - - - - - - -");
@@ -120,7 +122,7 @@ public class ManagerController extends UserController implements ManagerControll
         }
         for (Ticket ticket : userTickets) {
             int movieID = ticket.getMovieID();
-            Movie movie = new MovieService().getMovie(movieID);
+            Movie movie = movServ.getMovie(movieID);
             StringBuilder strB = new StringBuilder("Билет № ");
             strB.append(ticket.getTicketID()).append(" | ").append(movie.getTitle()).append(" | ")
                     .append(movie.getDateTime().toString().substring(0, 16)).append(" | владелец: ")
@@ -137,14 +139,14 @@ public class ManagerController extends UserController implements ManagerControll
         System.out.println("введите номер билета для отмены...");
         int ticketID = scanInt();
         checkIfTheTicketIsOfTheUser(ticketID, login);
-            new TicketService().removeUsernameFromTicket(ticketID);
+            tickServ.removeUsernameFromTicket(ticketID);
             System.out.println("билет для пользователя " + login + " №" + ticketID + " отменен");
             System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - -");
             System.out.println();
     }
 
     public void checkLoginInBase(String login) {
-        List<String> userLoginList = new UserService().getLoginsOfUsers();
+        List<String> userLoginList = usServ.getLoginsOfUsers();
         if (!userLoginList.contains(login)) {
             System.out.println("Операция прервана: пользователь с таким логином не зарегистрирован!");
             System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
@@ -153,7 +155,7 @@ public class ManagerController extends UserController implements ManagerControll
     }
 
     public void checkIfTheTicketIsFree(int ticketID) {
-        Ticket ticket = new TicketService().getTicket(ticketID);
+        Ticket ticket = tickServ.getTicket(ticketID);
         if (ticket.getUserName() != null) {
             String username = ticket.getUserName();
             System.out.println("Отказано в доступе: данный билет принадлежит пользователю <" + username + ">");
@@ -163,7 +165,7 @@ public class ManagerController extends UserController implements ManagerControll
     }
 
     public void checkIfTheTicketIsOfTheUser(int ticketID, String username) {
-        Ticket ticket = new TicketService().getTicket(ticketID);
+        Ticket ticket = tickServ.getTicket(ticketID);
         if (!ticket.getUserName().equals(username)) {
             System.out.println("Отказано в доступе: данный билет №" + ticketID +
                     " не принадлежит пользователю <" + username + ">");
@@ -175,7 +177,7 @@ public class ManagerController extends UserController implements ManagerControll
     public void changeMovieTitle() {
         System.out.println("введите № учетной записи фильма...");
         int movieID = scanInt();
-        Movie movie = new MovieService().getMovie(movieID);
+        Movie movie = movServ.getMovie(movieID);
         if (movie.getTitle() == null) {
             System.out.println("! - операция прервана: фильма с таким номером в базе не существует!");
             showManagerMenu();
@@ -187,7 +189,7 @@ public class ManagerController extends UserController implements ManagerControll
             System.out.println("! - операция прервана: некорректное название фильма!");
             showManagerMenu();
         }
-        new MovieService().updateTitleOfMovie(movieID, movieTitle.toUpperCase());
+        movServ.updateTitleOfMovie(movieID, movieTitle.toUpperCase());
         System.out.println("уч.запись №" + movieID + ": название '" + movie.getTitle() + "' успешно заменено на '" + movieTitle.toUpperCase() + "'");
         System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
     }
@@ -195,7 +197,7 @@ public class ManagerController extends UserController implements ManagerControll
     public void changeMovieSession() {
         System.out.println("введите № уч. записи фильма...");
         int movieID = scanInt();
-        Movie movie = new MovieService().getMovie(movieID);
+        Movie movie = movServ.getMovie(movieID);
         if (movie.getTitle() == null) {
             System.out.println("! - операция прервана: фильма с таким номером в базе не существует!");
             showManagerMenu();
@@ -203,12 +205,12 @@ public class ManagerController extends UserController implements ManagerControll
         System.out.println("фильм: " + movie.getTitle() + " | " + movie.getDateTime().toString().substring(0, 16));
         System.out.println("введите новые дату и время фильма...");
         String movieDateTime = scanString();
-        while (!new MovieService().inputCorrectDateTimeFormat(movieDateTime)) {
+        while (!movServ.inputCorrectDateTimeFormat(movieDateTime)) {
             System.out.println("Формат даты должен быть: 'гггг-мм-дд чч:мм' или 'гггг-мм-дд чч:мм:сс'");
             movieDateTime = scanString();
         }
         Timestamp newTimestamp = Timestamp.valueOf(correctDateTime(movieDateTime));
-        new MovieService().updateDateTimeOfMovie(movieID, newTimestamp);
+        movServ.updateDateTimeOfMovie(movieID, newTimestamp);
         System.out.println("уч.запись №" + movieID + " | '" + movie.getTitle() + "': дата сеанса изменена на " + movieDateTime);
         System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
     }

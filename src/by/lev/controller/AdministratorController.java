@@ -1,10 +1,7 @@
 package by.lev.controller;
 
 import by.lev.encoder.Base64encoder;
-import by.lev.service.InputCorrectness;
-import by.lev.service.MovieService;
-import by.lev.service.TicketService;
-import by.lev.service.UserService;
+import by.lev.service.*;
 import by.lev.movie.Movie;
 import by.lev.ticket.Ticket;
 import by.lev.user.Manager;
@@ -18,6 +15,12 @@ import static by.lev.controller.InputFunction.*;
 
 public class AdministratorController extends ManagerController implements AdministratorControllerInterface {
     Movie movie = new Movie();
+
+    public AdministratorController(UserServiceInterface usServ,
+                                   TicketServiceInterface tickServ,
+                                   MovieServiceInterface movServ) {
+        super(usServ, tickServ, movServ);
+    }
 
     public void showAdminMenu() {
         System.out.println("- - -|      CACTUS CINEMA      |- - -");
@@ -71,29 +74,29 @@ public class AdministratorController extends ManagerController implements Admini
 
         switch (inputValue) {
             case 1:
-                new AdministratorController().showMovieList();
+                showMovieList();
                 System.out.println();
                 showMovieOperations();
                 break;
             case 2:
-                new AdministratorController().showUpcomingSessions();
+                showUpcomingSessions();
                 System.out.println();
                 showMovieOperations();
                 break;
             case 3:
-                new AdministratorController().changeMovieTitle();
+                changeMovieTitle();
                 showMovieOperations();
                 break;
             case 4:
-                new AdministratorController().changeMovieSession();
+                changeMovieSession();
                 showMovieOperations();
                 break;
             case 5:
-                new AdministratorController().addNewMovieAccount();
+                addNewMovieAccount();
                 showMovieOperations();
                 break;
             case 6:
-                new AdministratorController().deleteMovieAccount();
+                deleteMovieAccount();
                 showAdminMenu();
                 break;
             case 0:
@@ -120,17 +123,17 @@ public class AdministratorController extends ManagerController implements Admini
 
         switch (inputValue) {
             case 1:
-                new AdministratorController().buyATicketForUser();
+                buyATicketForUser();
                 System.out.println();
                 showTicketOperations();
                 break;
             case 2:
-                new AdministratorController().showUserTickets();
+                showUserTickets();
                 System.out.println();
                 showTicketOperations();
                 break;
             case 3:
-                new AdministratorController().cancelTheTicket();
+                cancelTheTicket();
                 showTicketOperations();
                 break;
             case 0:
@@ -158,23 +161,23 @@ public class AdministratorController extends ManagerController implements Admini
         }
         switch (inputValue) {
             case 1:
-                new AdministratorController().showUserList();
+                showUserList();
                 showUserOperations();
                 break;
             case 2:
-                new AdministratorController().changePassword();
+                changePassword();
                 showUserOperations();
                 break;
             case 3:
-                new Registration().createNewUser();
+                createUserAccount();
                 showUserOperations();
                 break;
             case 4:
-                new AdministratorController().deleteTheUser();
+                deleteTheUser();
                 showUserOperations();
                 break;
             case 5:
-                new AdministratorController().createManagerAccount();
+                createManagerAccount();
                 showAdminMenu();
             case 0:
                 showAdminMenu();
@@ -199,7 +202,7 @@ public class AdministratorController extends ManagerController implements Admini
         movieToLoad.setTitle(title.toUpperCase());
         System.out.println("Введите дату и время показа фильма...");
         String sessionDate = scanString();
-        while (!new MovieService().inputCorrectDateTimeFormat(sessionDate)) {
+        while (!movServ.inputCorrectDateTimeFormat(sessionDate)) {
             System.out.println("Формат даты должен быть: 'гггг-мм-дд чч:мм' или 'гггг-мм-дд чч:мм:сс'");
             sessionDate = scanString();
         }
@@ -207,16 +210,16 @@ public class AdministratorController extends ManagerController implements Admini
             sessionDate = sessionDate + ":00";
         }
         movieToLoad.setDateTime(Timestamp.valueOf(sessionDate));
-        if (!new MovieService().checkActualityOfTheTime(sessionDate)) {
+        if (!movServ.checkActualityOfTheTime(sessionDate)) {
             System.out.println("операция прервана: данная дата уже прошла");
             showMovieOperations();
         }
-        if (new MovieService().isTheSlotOfThisDateTimeOccuped(sessionDate)) {
+        if (movServ.isTheSlotOfThisDateTimeOccuped(sessionDate)) {
             System.out.println("операция прервана: на данную дату уже запланирован другой сеанс");
             showMovieOperations();
         }
-        new MovieService().addMovie(movieToLoad);
-        movie = new MovieService().getMovie(movieToLoad.getTitle());
+        movServ.addMovie(movieToLoad);
+        movie = movServ.getMovie(movieToLoad.getTitle());
     }
 
     public void createMovieTickets() {
@@ -232,20 +235,20 @@ public class AdministratorController extends ManagerController implements Admini
             ticket.setMovieID(movie.getMovieID());
             ticket.setPlace(count);
             ticket.setCost(price);
-            new TicketService().addTicket(ticket);
+            tickServ.addTicket(ticket);
         }
     }
 
     public void deleteMovieAccount() {
         System.out.println("Введите № уч.записи для удаления...");
         int movieID = scanInt();
-        movie = new MovieService().getMovie(movieID);
+        movie = movServ.getMovie(movieID);
         if (movie.getTitle() == null) {
             System.out.println("операция прервана: уч.записи с данным номером не найдено");
             showMovieOperations();
         }
-        new TicketService().removeTicket(movie);
-        new MovieService().removeMovie(movieID);
+        tickServ.removeTicket(movie);
+        movServ.removeMovie(movieID);
         System.out.println("уч.запись №" + movieID + " (фильм: " + movie.getTitle() +
                 " " + movie.showDateTimeWithoutSeconds() + ") удалена");
         System.out.println("- - - - - - - - - - - - - - - - - - - - - - - -");
@@ -254,13 +257,13 @@ public class AdministratorController extends ManagerController implements Admini
     public void changePassword() {
         System.out.println("введите логин пользователя для смены пароля...");
         String login = scanString();
-        User user = new UserService().getUser(login);
+        User user = usServ.getUser(login);
         if (user.getPassword() == null) {
             System.out.println("операция прервана: такого пользователя нет в базе");
         }
         System.out.println("введите новый пароль...");
         String newPassword = scanString();
-        while (!new Registration().checkTheCorrectnessOfThePasswordInput(newPassword)) {
+        while (!checkTheCorrectnessOfThePasswordInput(newPassword)) {
             newPassword = scanString();
         }
         System.out.println("повторите пароль...");
@@ -269,7 +272,7 @@ public class AdministratorController extends ManagerController implements Admini
             System.out.println("введенные пароли не совпадают");
             showUserOperations();
         }
-        new UserService().updatePassword(login, newPassword);
+        usServ.updatePassword(login, newPassword);
         System.out.println("пароль успешно обновлен");
 
     }
@@ -277,34 +280,59 @@ public class AdministratorController extends ManagerController implements Admini
     public void deleteTheUser() {
         System.out.println("введите логин пользователя для удаления...");
         String login = scanString();
-        User user = new UserService().getUser(login);
+        User user = usServ.getUser(login);
         if (user.getPassword() == null) {
             System.out.println("операция прервана: пользователя с логином " + login + " в базе нет");
             showUserMenu();
         }
-        new UserService().removeUser(login);
+        usServ.removeUser(login);
         System.out.println("пользователь " + login + " удален");
-        List<Integer> userTicketNumbers = new TicketService().getTicketNumbersOfUser(user);
+        List<Integer> userTicketNumbers = tickServ.getTicketNumbersOfUser(user);
         String positiveResault = "данные пользователя " + login + " успешно удалены";
         if (userTicketNumbers.isEmpty()) {
             System.out.println(positiveResault);
         } else {
             for (Integer value : userTicketNumbers) {
-                new TicketService().removeUsernameFromTicket(value);
+                tickServ.removeUsernameFromTicket(value);
             }
             System.out.println(positiveResault);
         }
     }
 
+    @Override
+    public void createUserAccount() {
+        System.out.println("Создайте логин для уч.записи пользователя...");
+        String login = scanString();
+        while(!checkTheCorrectnessOfTheLoginInput(login)){
+            login = scanString();
+        }
+        System.out.println("Создайте пароль для уч.записи пользователя...");
+        String password = scanString();
+        while(!checkTheCorrectnessOfThePasswordInput(password)){
+            password = scanString();
+        }
+        System.out.println("Повторите пароль...");
+        String secondPassword = scanString();
+        if (!password.equals(secondPassword)){
+            System.out.println("операция прервана: пароли не совпадают");
+            showUserOperations();
+        }
+        String encodedPassword = new Base64encoder().getEncode(password);
+        User manager = new User(login, encodedPassword);
+        usServ.addUser(manager);
+        System.out.println("Новая учетная запись пользователя " + login + " создана!");
+        System.out.println();
+    }
+
     public void createManagerAccount() {
         System.out.println("Создайте логин для уч.записи мэнеджера...");
         String login = scanString();
-        while(!new Registration().checkTheCorrectnessOfTheLoginInput(login)){
+        while(!checkTheCorrectnessOfTheLoginInput(login)){
             login = scanString();
         }
         System.out.println("Создайте пароль для уч.записи мэнеджера...");
         String password = scanString();
-        while(!new Registration().checkTheCorrectnessOfThePasswordInput(password)){
+        while(!checkTheCorrectnessOfThePasswordInput(password)){
             password = scanString();
         }
         System.out.println("Повторите пароль...");
@@ -315,7 +343,7 @@ public class AdministratorController extends ManagerController implements Admini
         }
         String encodedPassword = new Base64encoder().getEncode(password);
         User manager = new Manager(login, encodedPassword);
-        new UserService().addUser(manager);
+        usServ.addUser(manager);
         System.out.println("Новая учетная запись для мэнеджера " + login + " создана!");
         System.out.println();
     }

@@ -30,7 +30,7 @@ public class UserDao implements UserDaoInterface<User, String> {
             try {
                 closeConnection();
             } catch (SQLException e) {
-                throw new UserException(UD_01F, UD_01F.getMessage(), e);
+                throw  new UserException(UD_01F, UD_01F.getMessage(), e);
             }
         }
     }

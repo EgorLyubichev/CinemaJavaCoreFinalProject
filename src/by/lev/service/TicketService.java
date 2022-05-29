@@ -4,12 +4,19 @@ import by.lev.exceptions.TicketException;
 import by.lev.movie.Movie;
 import by.lev.ticket.Ticket;
 import by.lev.ticket.TicketDao;
+import by.lev.ticket.TicketDaoInterface;
 import by.lev.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class TicketService implements TicketServiceInterface {
+    TicketDaoInterface<Ticket, Integer> tickDao;
+
+    public TicketService(TicketDaoInterface<Ticket, Integer> tickDao) {
+        this.tickDao = tickDao;
+    }
+
     @Override
     public boolean addTicket(Ticket ticket) {
         try {

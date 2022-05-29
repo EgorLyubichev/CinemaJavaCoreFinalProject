@@ -11,5 +11,6 @@ public interface AdministratorControllerInterface {
     void deleteMovieAccount();
     void changePassword();
     void deleteTheUser();
+    void createUserAccount();
     void createManagerAccount();
 }

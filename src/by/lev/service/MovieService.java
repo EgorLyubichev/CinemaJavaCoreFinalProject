@@ -1,10 +1,7 @@
 package by.lev.service;
 
 import by.lev.exceptions.MovieException;
-import by.lev.movie.DateTimeComparator;
-import by.lev.movie.Movie;
-import by.lev.movie.MovieDao;
-import by.lev.movie.MovieDateTimeComporator;
+import by.lev.movie.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -14,6 +11,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MovieService implements MovieServiceInterface {
+    MovieDaoInterface<Movie, Integer> movDao;
+
+    public MovieService(MovieDaoInterface<Movie, Integer> movDao) {
+        this.movDao = movDao;
+    }
+
     @Override
     public void addMovie(Movie movie) {
         try {

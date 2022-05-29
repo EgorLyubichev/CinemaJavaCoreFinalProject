@@ -3,18 +3,24 @@ package by.lev.service;
 import by.lev.exceptions.UserException;
 import by.lev.user.User;
 import by.lev.user.UserDao;
+import by.lev.user.UserDaoInterface;
 import by.lev.user.UserNameComparator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserService implements UserServiceInterface{
+public class UserService implements UserServiceInterface {
+
+    public UserService(UserDaoInterface<User, String> userDao) {
+    }
+
     @Override
-    public void addUser(User user) {
+    public boolean addUser(User user) {
         try {
             new UserDao().create(user);
+            return true;
         } catch (UserException e) {
-            e.printStackTrace();
+            return false;
         }
     }
 
@@ -31,11 +37,12 @@ public class UserService implements UserServiceInterface{
     }
 
     @Override
-    public void updatePassword(String login, String newPassword) {
+    public boolean updatePassword(String login, String newPassword) {
         try {
             new UserDao().update(login, newPassword);
+            return true;
         } catch (UserException e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
@@ -60,5 +67,15 @@ public class UserService implements UserServiceInterface{
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public List<User> getUserList() {
+        try {
+            List<User> userList = new UserDao().readAll();
+            return userList;
+        } catch (UserException e) {
+            return null;
+        }
     }
 }
