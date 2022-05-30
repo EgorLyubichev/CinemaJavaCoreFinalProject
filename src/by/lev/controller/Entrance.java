@@ -1,6 +1,7 @@
 package by.lev.controller;
 
 import by.lev.encoder.Base64encoder;
+import by.lev.logger.Logger;
 import by.lev.service.InputCorrectness;
 import by.lev.service.UserServiceInterface;
 import by.lev.user.User;

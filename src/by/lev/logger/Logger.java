@@ -12,34 +12,36 @@ import java.time.LocalDateTime;
 import static by.lev.controller.Entrance.USER_ONLINE;
 
 public class Logger {
-    private static String time = LocalDateTime.now().toString().substring(0,19);
-
-    //USER
 
     public static void writeVisit(){
+        String time = LocalDateTime.now().toString().substring(0,19);
         String message = "= = = = = = = = = = = = = = = = = = = = = = =\n"
                 + time + ": пользователь " + USER_ONLINE.getLogin() + " вошёл в систему.";
         writeToLogFile(message);
     }
 
     public static void writeExit(){
+        String time = LocalDateTime.now().toString().substring(0,19);
         String message = time + ": пользователь " + USER_ONLINE.getLogin()
                 + " вышел из системы.\n= = = = = = = = = = = = = = = = = = = = = = =";
         writeToLogFile(message);
     }
 
     public static void writeRegistration(User user){
+        String time = LocalDateTime.now().toString().substring(0,19);
         String message = "= = = = = = = = = = = = = = = = = = = = = = =\n"
                 + time + ": пользователь " + user.getLogin() + " зарегистрировался.";
         writeToLogFile(message);
     }
 
     public static void writeAction(String comment){
+        String time = LocalDateTime.now().toString().substring(0,19);
         String message = time + ": " + USER_ONLINE.getLogin() + " --> " + comment;
         writeToLogFile(message);
     }
 
     public static void writeBuyingATicketOfTheUser(int ticketId, String title, Timestamp session){
+        String time = LocalDateTime.now().toString().substring(0,19);
         StringBuilder message = new StringBuilder();
                 message.append(time)
                        .append(": ").append(USER_ONLINE.getLogin())
@@ -50,12 +52,10 @@ public class Logger {
     }
 
     public static void writeCancellingOfTheUserTicket(int ticketId){
+        String time = LocalDateTime.now().toString().substring(0,19);
         String message = time + ": " + USER_ONLINE.getLogin() + " отменил билет №" + ticketId;
         writeToLogFile(message);
     }
-
-
-    //ADMINISTRATOR
 
     private static void writeToLogFile(String message){
         File file = new File("src/by/lev/target/logFile.txt");
