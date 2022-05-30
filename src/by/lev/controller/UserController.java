@@ -1,6 +1,7 @@
 package by.lev.controller;
 
 import static by.lev.Constant.INCORRECT_INPUT;
+import static by.lev.Main.entrance;
 import static by.lev.controller.Entrance.USER_ONLINE;
 
 import by.lev.encoder.Base64encoder;
@@ -77,7 +78,7 @@ public class UserController implements UserControllerInterface {
                 break;
             case 0:
                 writeExit();
-                System.exit(0);
+                entrance.start();
         }
     }
 

@@ -14,21 +14,34 @@ import by.lev.user.UserDaoInterface;
 
 
 public class Main {
+
+    public static UserDaoInterface<User, String> usDao;
+    public static UserServiceInterface usServ;
+    public static TicketDaoInterface<Ticket, Integer> tickDao;
+    public static TicketServiceInterface tickServ;
+    public static MovieDaoInterface<Movie, Integer> movDao;
+    public static MovieServiceInterface movServ;
+    public static RegistrationInterface registration;
+    public static UserControllerInterface usCont;
+    public static ManagerControllerInterface manCont;
+    public static  AdministratorControllerInterface adCont;
+    public static Entrance entrance;
+
     public static void main(String[] args) {
-        UserDaoInterface<User, String> usDao = new UserDao();
-        UserServiceInterface usServ = new UserService(usDao);
-        TicketDaoInterface<Ticket, Integer> tickDao = new TicketDao();
-        TicketServiceInterface tickServ = new TicketService(tickDao);
-        MovieDaoInterface<Movie, Integer> movDao = new MovieDao();
-        MovieServiceInterface movServ = new MovieService(movDao);
+        {
+            usDao = new UserDao();
+            usServ = new UserService(usDao);
+            tickDao = new TicketDao();
+            tickServ = new TicketService(tickDao);
+            movDao = new MovieDao();
+            movServ = new MovieService(movDao);
+            registration = new Registration(usServ);
+            usCont = new UserController(usServ, tickServ, movServ);
+            manCont = new ManagerController(usServ, tickServ, movServ);
+            adCont = new AdministratorController(usServ, tickServ, movServ);
+            entrance = new Entrance(usServ, usCont, manCont, adCont, registration);
+        }
 
-        RegistrationInterface registration = new Registration(usServ);
-
-        UserControllerInterface usCont = new UserController(usServ, tickServ, movServ);
-        ManagerControllerInterface manCont = new ManagerController(usServ, tickServ, movServ);
-        AdministratorControllerInterface adCont  =new AdministratorController(usServ, tickServ, movServ);
-
-        EntranceInterface entrance = new Entrance(usServ, usCont, manCont, adCont, registration);
         entrance.start();
 
     }

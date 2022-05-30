@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import static by.lev.Constant.INCORRECT_INPUT;
+import static by.lev.Main.entrance;
 import static by.lev.controller.InputFunction.*;
 import static by.lev.logger.Logger.*;
 
@@ -84,7 +85,7 @@ public class ManagerController extends UserController implements ManagerControll
                 break;
             case 0:
                 writeExit();
-                System.exit(0);
+                entrance.start();
         }
     }
 
