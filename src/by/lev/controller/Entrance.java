@@ -95,10 +95,13 @@ public class Entrance implements EntranceInterface {
     private void goToActualMenu() {
         writeVisit();
         if (USER_ONLINE.getLevel() == USER) {
+            writeAction(" меню пользователя");
             usCont.showUserMenu();
         } else if (USER_ONLINE.getLevel() == MANAGER) {
+            writeAction(" меню менеджера");
             manCont.showManagerMenu();
         } else if (USER_ONLINE.getLevel() == ADMINISTRATOR) {
+            writeAction(" меню администратора");
             adCont.showAdminMenu();
         }
     }

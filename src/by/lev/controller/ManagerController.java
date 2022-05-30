@@ -142,7 +142,7 @@ public class ManagerController extends UserController implements ManagerControll
                     .append(ticket.getCost()).append("$");
             System.out.println(strB);
         }
-        String message = "просмотрены билетя для пользователя " + login;
+        String message = "просмотрены билеты для пользователя " + login;
         writeAction(message);
     }
 

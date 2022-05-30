@@ -40,12 +40,15 @@ public class AdministratorController extends ManagerController implements Admini
 
         switch (inputValue) {
             case 1:
+                writeAction(" операции с фильмами");
                 showMovieOperations();
                 break;
             case 2:
+                writeAction(" операции с билетами");
                 showTicketOperations();
                 break;
             case 3:
+                writeAction(" операции с пользователями");
                 showUserOperations();
                 break;
             case 0:
@@ -76,32 +79,39 @@ public class AdministratorController extends ManagerController implements Admini
 
         switch (inputValue) {
             case 1:
+                writeAction(" весь список фильмов");
                 showMovieList();
                 System.out.println();
                 showMovieOperations();
                 break;
             case 2:
+                writeAction(" список предстоящих фильмов");
                 showUpcomingSessions();
                 System.out.println();
                 showMovieOperations();
                 break;
             case 3:
+                writeAction(" изменение названия фильма");
                 changeMovieTitle();
                 showMovieOperations();
                 break;
             case 4:
+                writeAction(" изменение даты и времени сеанса");
                 changeMovieSession();
                 showMovieOperations();
                 break;
             case 5:
+                writeAction(" добавление нового фильма");
                 addNewMovieAccount();
                 showMovieOperations();
                 break;
             case 6:
+                writeAction(" удаление фильма");
                 deleteMovieAccount();
                 showAdminMenu();
                 break;
             case 0:
+                writeAction(" основное меню администратора");
                 showAdminMenu();
         }
     }
@@ -125,20 +135,24 @@ public class AdministratorController extends ManagerController implements Admini
 
         switch (inputValue) {
             case 1:
+                writeAction(" покупка билета пользователю");
                 buyATicketForUser();
                 System.out.println();
                 showTicketOperations();
                 break;
             case 2:
-                showUserTickets();
+                writeAction(" просмотр билетов пользователя");
+                showTheUserTickets();
                 System.out.println();
                 showTicketOperations();
                 break;
             case 3:
+                writeAction(" отмена билетя для пользователя");
                 cancelTheTicket();
                 showTicketOperations();
                 break;
             case 0:
+                writeAction(" основное меню администратора");
                 showAdminMenu();
         }
     }
@@ -163,25 +177,31 @@ public class AdministratorController extends ManagerController implements Admini
         }
         switch (inputValue) {
             case 1:
+                writeAction(" список пользователей");
                 showUserList();
                 showUserOperations();
                 break;
             case 2:
+                writeAction(" изменение пароля пользователя");
                 changePassword();
                 showUserOperations();
                 break;
             case 3:
+                writeAction(" создание новой учетной записи");
                 createUserAccount();
                 showUserOperations();
                 break;
             case 4:
+                writeAction(" удаление пользователя");
                 deleteTheUser();
                 showUserOperations();
                 break;
             case 5:
+                writeAction(" создание новой учетной записи менеджера");
                 createManagerAccount();
-                showAdminMenu();
+                showUserOperations();
             case 0:
+                writeAction(" основное меню администратора");
                 showAdminMenu();
         }
     }
@@ -189,8 +209,10 @@ public class AdministratorController extends ManagerController implements Admini
     public void addNewMovieAccount() {
         createNewMovie();
         createMovieTickets();
-        System.out.println("уч.запись для фильма '" + movie.getTitle().toUpperCase() +
-                "' на дату " + movie.showDateTimeWithoutSeconds() + " со списком билетов успешно добавлена");
+        String message = "уч.запись для фильма '" + movie.getTitle().toUpperCase() +
+                "' на дату " + movie.showDateTimeWithoutSeconds() + " со списком билетов успешно добавлена";
+        System.out.println(message);
+        writeAction(message);
     }
 
     public void createNewMovie() {
@@ -246,14 +268,18 @@ public class AdministratorController extends ManagerController implements Admini
         int movieID = scanInt();
         movie = movServ.getMovie(movieID);
         if (movie.getTitle() == null) {
-            System.out.println("операция прервана: уч.записи с данным номером не найдено");
+            String wrong = "операция прервана: уч.записи с данным номером не найдено";
+            System.out.println(wrong);
+            writeAction(wrong);
             showMovieOperations();
         }
         tickServ.removeTicket(movie);
         movServ.removeMovie(movieID);
-        System.out.println("уч.запись №" + movieID + " (фильм: " + movie.getTitle() +
-                " " + movie.showDateTimeWithoutSeconds() + ") удалена");
+        String message = "уч.запись №" + movieID + " (фильм: " + movie.getTitle() +
+                " " + movie.showDateTimeWithoutSeconds() + ") удалена";
+        System.out.println(message);
         System.out.println("- - - - - - - - - - - - - - - - - - - - - - - -");
+        writeAction(message);
     }
 
     public void changePassword() {
@@ -261,7 +287,10 @@ public class AdministratorController extends ManagerController implements Admini
         String login = scanString();
         User user = usServ.getUser(login);
         if (user.getPassword() == null) {
-            System.out.println("операция прервана: такого пользователя нет в базе");
+            String wrong = "операция прервана: такого пользователя нет в базе";
+            System.out.println(wrong);
+            writeAction(wrong);
+            showUserOperations();
         }
         System.out.println("введите новый пароль...");
         String newPassword = scanString();
@@ -271,12 +300,15 @@ public class AdministratorController extends ManagerController implements Admini
         System.out.println("повторите пароль...");
         String repeatPassword = scanString();
         if (!newPassword.equals(repeatPassword)) {
-            System.out.println("введенные пароли не совпадают");
+            String wrong2 = "операция прервана: введенные пароли не совпадают";
+            System.out.println(wrong2);
+            writeAction(wrong2);
             showUserOperations();
         }
         usServ.updatePassword(login, newPassword);
         System.out.println("пароль успешно обновлен");
-
+        String message = "пароль для пользователя " + login + " изменен";
+        writeAction(message);
     }
 
     public void deleteTheUser() {
@@ -284,20 +316,23 @@ public class AdministratorController extends ManagerController implements Admini
         String login = scanString();
         User user = usServ.getUser(login);
         if (user.getPassword() == null) {
-            System.out.println("операция прервана: пользователя с логином " + login + " в базе нет");
-            showUserMenu();
+            String wrong = "операция прервана: пользователя с логином " + login + " в базе нет";
+            System.out.println(wrong);
+            writeAction(wrong);
+            showUserOperations();
         }
         usServ.removeUser(login);
         System.out.println("пользователь " + login + " удален");
         List<Integer> userTicketNumbers = tickServ.getTicketNumbersOfUser(user);
-        String positiveResault = "данные пользователя " + login + " успешно удалены";
+        String message = "данные пользователя " + login + " успешно удалены";
         if (userTicketNumbers.isEmpty()) {
-            System.out.println(positiveResault);
+            System.out.println(message);
         } else {
             for (Integer value : userTicketNumbers) {
                 tickServ.removeUsernameFromTicket(value);
             }
-            System.out.println(positiveResault);
+            System.out.println(message);
+            writeAction(message);
         }
     }
 
@@ -316,13 +351,17 @@ public class AdministratorController extends ManagerController implements Admini
         System.out.println("Повторите пароль...");
         String secondPassword = scanString();
         if (!password.equals(secondPassword)){
-            System.out.println("операция прервана: пароли не совпадают");
+            String wrong = "операция прервана: пароли не совпадают";
+            System.out.println(wrong);
+            writeAction(wrong);
             showUserOperations();
         }
         String encodedPassword = new Base64encoder().getEncode(password);
         User manager = new User(login, encodedPassword);
         usServ.addUser(manager);
-        System.out.println("Новая учетная запись пользователя " + login + " создана!");
+        String message = "Новая учетная запись пользователя " + login + " создана!";
+        System.out.println(message);
+        writeAction(message);
         System.out.println();
     }
 
@@ -340,13 +379,17 @@ public class AdministratorController extends ManagerController implements Admini
         System.out.println("Повторите пароль...");
         String secondPassword = scanString();
         if (!password.equals(secondPassword)){
-            System.out.println("операция прервана: пароли не совпадают");
+            String wrong = "операция прервана: пароли не совпадают";
+            System.out.println(wrong);
+            writeAction(wrong);
             showUserOperations();
         }
         String encodedPassword = new Base64encoder().getEncode(password);
         User manager = new Manager(login, encodedPassword);
         usServ.addUser(manager);
-        System.out.println("Новая учетная запись для мэнеджера " + login + " создана!");
+        String message = "Новая учетная запись для мэнеджера " + login + " создана!";
+        System.out.println(message);
+        writeAction(message);
         System.out.println();
     }
 }

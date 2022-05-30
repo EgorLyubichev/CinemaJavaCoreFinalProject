@@ -34,8 +34,8 @@ public class Logger {
         writeToLogFile(message);
     }
 
-    public static void writeAction(String methodName){
-        String message = time + ": " + USER_ONLINE.getLogin() + " --> " + methodName;
+    public static void writeAction(String comment){
+        String message = time + ": " + USER_ONLINE.getLogin() + " --> " + comment;
         writeToLogFile(message);
     }
 
