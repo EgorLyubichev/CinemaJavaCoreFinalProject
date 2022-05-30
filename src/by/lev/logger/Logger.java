@@ -6,65 +6,54 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import static by.lev.controller.Entrance.USER_ONLINE;
 
 public class Logger {
+    private static String time = LocalDateTime.now().toString().substring(0,19);
 
     //USER
 
-    public static void writeUserVisit(){
-        String timestamp = LocalDateTime.now().toString();
+    public static void writeVisit(){
         String message = "= = = = = = = = = = = = = = = = = = = = = = =\n"
-                + timestamp + ": пользователь " + USER_ONLINE.getLogin() + " вошёл в систему.";
+                + time + ": пользователь " + USER_ONLINE.getLogin() + " вошёл в систему.";
         writeToLogFile(message);
     }
 
-    public static void writeUserExit(){
-        String timestamp = LocalDateTime.now().toString();
-        String message = timestamp + ": пользователь " + USER_ONLINE.getLogin()
+    public static void writeExit(){
+        String message = time + ": пользователь " + USER_ONLINE.getLogin()
                 + " вышел из системы.\n= = = = = = = = = = = = = = = = = = = = = = =";
         writeToLogFile(message);
     }
 
-    public static void writeUserRegistration(User user){
-        String timestamp = LocalDateTime.now().toString();
+    public static void writeRegistration(User user){
         String message = "= = = = = = = = = = = = = = = = = = = = = = =\n"
-                + timestamp + ": пользователь " + user.getLogin() + " зарегистрировался.";
+                + time + ": пользователь " + user.getLogin() + " зарегистрировался.";
         writeToLogFile(message);
     }
 
-    public static void writeUserAction(String methodName){
-        String timestamp = LocalDateTime.now().toString();
-        String message = timestamp + ": " + USER_ONLINE.getLogin() + " --> " + methodName;
-        writeToLogFile(message);
-    }
-    public static void writeUserAction(String methodName, String comment){
-        String timestamp = LocalDateTime.now().toString();
-        String message = timestamp + ": " + USER_ONLINE.getLogin() + " --> " + methodName;
+    public static void writeAction(String methodName){
+        String message = time + ": " + USER_ONLINE.getLogin() + " --> " + methodName;
         writeToLogFile(message);
     }
 
-    public static void writeBuyingATicketOfTheUser(int ticketId){
-        String timestamp = LocalDateTime.now().toString();
-        String message = timestamp + ": " + USER_ONLINE.getLogin() + " приобрел билет №" + ticketId;
-        writeToLogFile(message);
+    public static void writeBuyingATicketOfTheUser(int ticketId, String title, Timestamp session){
+        StringBuilder message = new StringBuilder();
+                message.append(time)
+                       .append(": ").append(USER_ONLINE.getLogin())
+                       .append(" приобрел билет №").append(ticketId)
+                       .append(" на фильм: ").append(title)
+                       .append(" на сеанс ").append(session.toString().substring(0,16));
+        writeToLogFile(message.toString());
     }
 
     public static void writeCancellingOfTheUserTicket(int ticketId){
-        String timestamp = LocalDateTime.now().toString();
-        String message = timestamp + ": " + USER_ONLINE.getLogin() + " отменил билет №" + ticketId;
+        String message = time + ": " + USER_ONLINE.getLogin() + " отменил билет №" + ticketId;
         writeToLogFile(message);
     }
 
-    public static void writeMethodError(User user, String methodName){
-        String timestamp = LocalDateTime.now().toString();
-        String message = timestamp + ": " + user.getLogin() + " --> " + methodName;
-        writeToLogFile(message);
-    }
-
-    //MANAGER
 
     //ADMINISTRATOR
 

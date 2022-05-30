@@ -93,7 +93,7 @@ public class Entrance implements EntranceInterface {
     }
 
     private void goToActualMenu() {
-        writeUserVisit();
+        writeVisit();
         if (USER_ONLINE.getLevel() == USER) {
             usCont.showUserMenu();
         } else if (USER_ONLINE.getLevel() == MANAGER) {

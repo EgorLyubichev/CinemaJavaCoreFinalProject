@@ -34,6 +34,7 @@ public class UserController implements UserControllerInterface {
     List<Timestamp> timestampList = new ArrayList<>();
 
     public void showUserMenu() {
+        writeAction(" меню пользователя");
         System.out.println("- - -|  CACTUS CINEMA  |- - -");
         System.out.println("- - -| ГЛАВНАЯ СТРАНИЦА|- - -");
         System.out.println("<1> - предстоящие фильмы");
@@ -51,14 +52,17 @@ public class UserController implements UserControllerInterface {
         }
         switch (inputValue) {
             case 1:
+                writeAction(" предстоящие фильмы");
                 showUpcomingSessions();
                 System.out.println();
                 showUserMenu();
                 break;
             case 2:
+                writeAction(" покупка билетов");
                 buyATicket();
                 break;
             case 3:
+                writeAction(" список собственных билетов");
                 showUserTickets();
                 showUserMenu();
                 break;
@@ -67,11 +71,12 @@ public class UserController implements UserControllerInterface {
                 showUserMenu();
                 break;
             case 5:
+                writeAction(" вкладка 'изменить пароль'");
                 changePassword();
                 showUserMenu();
                 break;
             case 0:
-                writeUserExit();
+                writeExit();
                 System.exit(0);
         }
     }
@@ -84,7 +89,6 @@ public class UserController implements UserControllerInterface {
                     .append("\n- - - - - - - - - - - - - - - - - -");
             System.out.println(strB);
         }
-        writeUserAction("showUpcomingSessions");
     }
 
     public void buyATicket() {
@@ -172,7 +176,7 @@ public class UserController implements UserControllerInterface {
             case 1:
                 tickServ.assignTheUserInTheTicket(ticket.getTicketID(), USER_ONLINE);
                 System.out.println("Билет оплачен!");
-                writeBuyingATicketOfTheUser(ticket.getTicketID());
+                writeBuyingATicketOfTheUser(ticket.getTicketID(), movie.getTitle(), movie.getDateTime());
                 System.out.println("<1> - купить новый билет\n<2> - перейти в основное меню");
                 boolean inputCorrect = false;
                 while (!inputCorrect) {
@@ -211,7 +215,6 @@ public class UserController implements UserControllerInterface {
                     .append(" | цена: ").append(ticket.getCost()).append("$");
             System.out.println(strB);
         }
-        writeUserAction("showUserTickets");
     }
 
     private boolean checkTicketNumberInTheUserCollection(int ticketID) {
@@ -241,7 +244,6 @@ public class UserController implements UserControllerInterface {
     }
 
     public void changePassword() {
-        writeUserAction("changePassword entrance");
         System.out.println("введите свой пароль...");
         String oldPassword = scanString();
         String encodeOldPassword = new Base64encoder().getEncode(oldPassword);
@@ -258,11 +260,12 @@ public class UserController implements UserControllerInterface {
         String repeatPassword = scanString();
         if (!newPassword.equals(repeatPassword)) {
             System.out.println("введенные пароли не совпадают");
+            writeAction(" пароль не изменен, несовпадение ввода данных");
             showUserMenu();
         }
         String encodeNewPassword = new Base64encoder().getEncode(newPassword);
         usServ.updatePassword(USER_ONLINE.getLogin(), encodeNewPassword);
         System.out.println("пароль успешно обновлен");
-        writeUserAction("changePassword, true, exit");
+        writeAction(" пароль изменен успешно");
     }
 }

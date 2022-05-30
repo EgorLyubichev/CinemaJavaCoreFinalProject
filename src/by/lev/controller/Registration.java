@@ -9,6 +9,7 @@ import java.util.List;
 
 import static by.lev.controller.InputFunction.*;
 import static by.lev.controller.InputFunction.scanString;
+import static by.lev.logger.Logger.writeRegistration;
 
 public class Registration implements RegistrationInterface{
     UserServiceInterface usServ;
@@ -23,6 +24,7 @@ public class Registration implements RegistrationInterface{
         setCorrectLogin();
         setCorrectPassword();
         usServ.addUser(newUser);
+        writeRegistration(newUser);
         System.out.println("учетная запись успешно добавлена");
     }
     private void setCorrectLogin() {

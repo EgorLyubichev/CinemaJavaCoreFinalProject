@@ -10,6 +10,7 @@ import java.util.List;
 
 import static by.lev.Constant.INCORRECT_INPUT;
 import static by.lev.controller.InputFunction.*;
+import static by.lev.logger.Logger.*;
 
 public class ManagerController extends UserController implements ManagerControllerInterface{
 
@@ -40,40 +41,49 @@ public class ManagerController extends UserController implements ManagerControll
 
         switch (inputValue) {
             case 1:
+                writeAction(" весь список фильмов");
                 showMovieList();
                 System.out.println();
                 showManagerMenu();
                 break;
             case 2:
+                writeAction(" список предстоящих фильмов");
                 showUpcomingSessions();
                 System.out.println();
                 showManagerMenu();
                 break;
             case 3:
+                writeAction(" список имеющихся пользователей");
                 showUserList();
                 showManagerMenu();
                 break;
             case 4:
+                writeAction(" покупка билета для пользователя");
                 buyATicketForUser();
                 showManagerMenu();
                 break;
             case 5:
+                writeAction(" просмотр билетов пользователя");
                 showTheUserTickets();
                 showManagerMenu();
                 break;
             case 6:
+                writeAction(" отмена билета пользователя");
                 cancelTheTicket();
                 showManagerMenu();
                 break;
             case 7:
+                writeAction(" изменение названия фильма");
                 changeMovieTitle();
                 showManagerMenu();
                 break;
             case 8:
+                writeAction(" изменение даты и времени сеанса");
                 changeMovieSession();
                 showManagerMenu();
                 break;
             case 0:
+                writeExit();
                 System.exit(0);
         }
     }
@@ -104,7 +114,9 @@ public class ManagerController extends UserController implements ManagerControll
         User user = new User();
         user.setLogin(login);
         tickServ.assignTheUserInTheTicket(ticketID, user);
-        System.out.println("билет № " + ticketID + " для пользователя <" + login + "> приобретён");
+        String message = "билет № " + ticketID + " для пользователя <" + login + "> приобретён";
+        System.out.println(message);
+        writeAction(message);
         System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
     }
 
@@ -130,6 +142,8 @@ public class ManagerController extends UserController implements ManagerControll
                     .append(ticket.getCost()).append("$");
             System.out.println(strB);
         }
+        String message = "просмотрены билетя для пользователя " + login;
+        writeAction(message);
     }
 
     public void cancelTheTicket() {
@@ -140,8 +154,10 @@ public class ManagerController extends UserController implements ManagerControll
         int ticketID = scanInt();
         checkIfTheTicketIsOfTheUser(ticketID, login);
             tickServ.removeUsernameFromTicket(ticketID);
-            System.out.println("билет для пользователя " + login + " №" + ticketID + " отменен");
+            String message = "билет для пользователя " + login + " №" + ticketID + " отменен";
+            System.out.println(message);
             System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+            writeAction(message);
             System.out.println();
     }
 
@@ -179,19 +195,25 @@ public class ManagerController extends UserController implements ManagerControll
         int movieID = scanInt();
         Movie movie = movServ.getMovie(movieID);
         if (movie.getTitle() == null) {
-            System.out.println("! - операция прервана: фильма с таким номером в базе не существует!");
+            String wrong1 = "! - операция прервана: фильма с таким номером в базе не существует!";
+            System.out.println(wrong1);
+            writeAction(wrong1);
             showManagerMenu();
         }
         System.out.println("фильм: " + movie.getTitle());
         System.out.println("введите новое название фильма...");
         String movieTitle = scanString();
         if (movieTitle.length() < 1 || movieTitle.equals(" ")) {
-            System.out.println("! - операция прервана: некорректное название фильма!");
+            String wrong2 = "! - операция прервана: некорректное название фильма!";
+            System.out.println(wrong2);
+            writeAction(wrong2);
             showManagerMenu();
         }
         movServ.updateTitleOfMovie(movieID, movieTitle.toUpperCase());
-        System.out.println("уч.запись №" + movieID + ": название '" + movie.getTitle() + "' успешно заменено на '" + movieTitle.toUpperCase() + "'");
+        String message = "уч.запись №" + movieID + ": название '" + movie.getTitle() + "' успешно заменено на '" + movieTitle.toUpperCase() + "'";
+        System.out.println(message);
         System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+        writeAction(message);
     }
 
     public void changeMovieSession() {
@@ -199,7 +221,9 @@ public class ManagerController extends UserController implements ManagerControll
         int movieID = scanInt();
         Movie movie = movServ.getMovie(movieID);
         if (movie.getTitle() == null) {
-            System.out.println("! - операция прервана: фильма с таким номером в базе не существует!");
+            String wrong1 = "! - операция прервана: фильма с таким номером в базе не существует!";
+            System.out.println(wrong1);
+            writeAction(wrong1);
             showManagerMenu();
         }
         System.out.println("фильм: " + movie.getTitle() + " | " + movie.getDateTime().toString().substring(0, 16));
@@ -211,8 +235,10 @@ public class ManagerController extends UserController implements ManagerControll
         }
         Timestamp newTimestamp = Timestamp.valueOf(correctDateTime(movieDateTime));
         movServ.updateDateTimeOfMovie(movieID, newTimestamp);
-        System.out.println("уч.запись №" + movieID + " | '" + movie.getTitle() + "': дата сеанса изменена на " + movieDateTime);
+        String message = "уч.запись №" + movieID + " | '" + movie.getTitle() + "': дата сеанса изменена на " + movieDateTime;
+        System.out.println(message);
         System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+        writeAction(message);
     }
 
     private static String correctDateTime(String dateTime) {
