@@ -4,12 +4,14 @@ import by.lev.movie.Movie;
 import by.lev.service.*;
 import by.lev.ticket.Ticket;
 import by.lev.user.User;
+import by.lev.user.UsersAccessLevel;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 import static by.lev.Constant.INCORRECT_INPUT;
-import static by.lev.Main.entrance;
+import static by.lev.Main.*;
+import static by.lev.controller.Entrance.USER_ONLINE;
 import static by.lev.controller.InputFunction.*;
 import static by.lev.logger.Logger.*;
 
@@ -233,6 +235,16 @@ public class ManagerController extends UserController implements ManagerControll
         while (!movServ.inputCorrectDateTimeFormat(movieDateTime)) {
             System.out.println("Формат даты должен быть: 'гггг-мм-дд чч:мм' или 'гггг-мм-дд чч:мм:сс'");
             movieDateTime = scanString();
+        }
+        if(!movServ.checkActualityOfTheTime(correctDateTime(movieDateTime))){
+            String wrong = "Операция прервана: указанная дата уже прошла";
+            System.out.println(wrong);
+            writeAction(wrong);
+            if (USER_ONLINE.getLevel().equals(UsersAccessLevel.MANAGER)){
+                manCont.showManagerMenu();
+            } else if (USER_ONLINE.getLevel().equals(UsersAccessLevel.ADMINISTRATOR)) {
+                adCont.showMovieOperations();
+            }
         }
         Timestamp newTimestamp = Timestamp.valueOf(correctDateTime(movieDateTime));
         movServ.updateDateTimeOfMovie(movieID, newTimestamp);

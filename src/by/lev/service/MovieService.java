@@ -20,8 +20,8 @@ public class MovieService implements MovieServiceInterface {
     @Override
     public void addMovie(Movie movie) {
         try {
-            new MovieDao().create(movie);
-        } catch (MovieException e) {
+            movDao.create(movie);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -30,8 +30,8 @@ public class MovieService implements MovieServiceInterface {
     public List<Movie> getAllMovies() {
         List<Movie> movies = new ArrayList<>();
         try {
-            movies = new MovieDao().readAll();
-        } catch (MovieException e) {
+            movies = movDao.readAll();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         movies.sort(new MovieDateTimeComporator());
@@ -43,8 +43,8 @@ public class MovieService implements MovieServiceInterface {
         List<Movie> movieList = new ArrayList<>();
         List<Movie> upcomingMovies = new ArrayList<>();
         try {
-            movieList = new MovieDao().readAll();
-        } catch (MovieException e) {
+            movieList = movDao.readAll();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         for (Movie movie : movieList) {
@@ -61,7 +61,7 @@ public class MovieService implements MovieServiceInterface {
         List<Timestamp> timestamps = new ArrayList<>();
         List<Timestamp> upcomingTimestamps = new ArrayList<>();
         try {
-            timestamps = new MovieDao().readTimestampsOfTheMovie(title);
+            timestamps = movDao.readTimestampsOfTheMovie(title);
         } catch (MovieException e) {
             e.printStackTrace();
         }
@@ -78,7 +78,7 @@ public class MovieService implements MovieServiceInterface {
     public boolean checkIfTitleListContainsTheTitle(String title) {
         List<String> titles = new ArrayList<>();
         try {
-            titles = new MovieDao().readTitles();
+            titles = movDao.readTitles();
         } catch (MovieException e) {
             e.printStackTrace();
         }
@@ -89,7 +89,7 @@ public class MovieService implements MovieServiceInterface {
     public int getMovieIdOnTheDateTimeRequest(Timestamp timestamp) {
         int result = -1;
         try {
-            result = new MovieDao().readMovieIdOnTheDateTimeRequest(timestamp);
+            result = movDao.readMovieIdOnTheDateTimeRequest(timestamp);
         } catch (MovieException e) {
             e.printStackTrace();
         }
@@ -100,8 +100,8 @@ public class MovieService implements MovieServiceInterface {
     public Movie getMovie(int movieID) {
         Movie movie = new Movie();
         try {
-            movie = new MovieDao().read(movieID);
-        } catch (MovieException e) {
+            movie = movDao.read(movieID);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return movie;
@@ -111,7 +111,7 @@ public class MovieService implements MovieServiceInterface {
     public Movie getMovie(String title) {
         Movie movie = new Movie();
         try {
-            movie = new MovieDao().read(title);
+            movie = movDao.read(title);
         } catch (MovieException e) {
             e.printStackTrace();
         }
@@ -121,7 +121,7 @@ public class MovieService implements MovieServiceInterface {
     @Override
     public void updateTitleOfMovie(int movieID, String title) {
         try {
-            new MovieDao().update(movieID, title);
+            movDao.update(movieID, title);
         } catch (MovieException e) {
             e.printStackTrace();
         }
@@ -130,7 +130,7 @@ public class MovieService implements MovieServiceInterface {
     @Override
     public void updateDateTimeOfMovie(int movieID, Timestamp newTimestamp) {
         try {
-            new MovieDao().update(movieID, newTimestamp);
+            movDao.update(movieID, newTimestamp);
         } catch (MovieException e) {
             e.printStackTrace();
         }
@@ -139,8 +139,8 @@ public class MovieService implements MovieServiceInterface {
     @Override
     public void removeMovie(int movieID) {
         try {
-            new MovieDao().delete(movieID);
-        } catch (MovieException e) {
+            movDao.delete(movieID);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -149,7 +149,7 @@ public class MovieService implements MovieServiceInterface {
     public boolean isTheSlotOfThisDateTimeOccuped(String dateTime) {
         Boolean result = null;
         try {
-            result = new MovieDao().isTheSlotOfThisDateTimeOccuped(dateTime);
+            result = movDao.isTheSlotOfThisDateTimeOccuped(dateTime);
         } catch (MovieException e) {
             e.printStackTrace();
         }

@@ -24,7 +24,7 @@ public class Main {
     public static RegistrationInterface registration;
     public static UserControllerInterface usCont;
     public static ManagerControllerInterface manCont;
-    public static  AdministratorControllerInterface adCont;
+    public static AdministratorControllerInterface adCont;
     public static Entrance entrance;
 
     public static void main(String[] args) {
@@ -43,6 +43,5 @@ public class Main {
         }
 
         entrance.start();
-
     }
 }

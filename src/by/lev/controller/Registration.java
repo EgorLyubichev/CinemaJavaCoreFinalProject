@@ -7,6 +7,7 @@ import by.lev.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import static by.lev.Main.entrance;
 import static by.lev.controller.InputFunction.*;
 import static by.lev.controller.InputFunction.scanString;
 import static by.lev.logger.Logger.writeRegistration;
@@ -30,10 +31,13 @@ public class Registration implements RegistrationInterface{
     private void setCorrectLogin() {
         System.out.println("- - -| CACTUS CINEMA |- - -");
         System.out.println("- - -|  РЕГИСТРАЦИЯ  |- - -");
-        System.out.println("введите логин для новой учетной записи: ");
+        System.out.println("введите логин для новой учетной записи...\n<0> - для выхода из регистрации");
         String login = scanString();
         while (!checkTheCorrectnessOfTheLoginInput(login)) {
             login = scanString();
+        }
+        if ("0".equals(login)){
+            entrance.start();
         }
         List<String> userLoginList = usServ.getLoginsOfUsers();
         List<String> userLoginListToLowerCase = new ArrayList<>();

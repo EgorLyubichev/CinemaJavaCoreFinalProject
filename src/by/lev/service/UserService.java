@@ -10,17 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserService implements UserServiceInterface {
+    private UserDaoInterface<User, String> userDao;
 
     public UserService(UserDaoInterface<User, String> userDao) {
+        this.userDao = userDao;
     }
 
     @Override
     public boolean addUser(User user) {
         try {
-            new UserDao().create(user);
+            userDao.create(user);
             return true;
-        } catch (UserException e) {
-            return false;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -28,10 +30,9 @@ public class UserService implements UserServiceInterface {
     public User getUser(String login) {
         User user = new User();
         try {
-            user = new UserDao().read(login);
-
-        } catch (UserException e) {
-            e.printStackTrace();
+            user = userDao.read(login);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return user;
     }
@@ -39,7 +40,7 @@ public class UserService implements UserServiceInterface {
     @Override
     public boolean updatePassword(String login, String newPassword) {
         try {
-            new UserDao().update(login, newPassword);
+            userDao.update(login, newPassword);
             return true;
         } catch (UserException e) {
             return false;
@@ -50,7 +51,7 @@ public class UserService implements UserServiceInterface {
     public List<String> getLoginsOfUsers() {
         List<String> loginsOfUsers = new ArrayList<>();
         try {
-            loginsOfUsers = new UserDao().readUserNameList();
+            loginsOfUsers = userDao.readUserNameList();
         } catch (UserException e) {
             e.printStackTrace();
         }
@@ -61,9 +62,9 @@ public class UserService implements UserServiceInterface {
     @Override
     public boolean removeUser(String login) {
         try {
-            new UserDao().delete(login);
+            userDao.delete(login);
             return true;
-        } catch (UserException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -71,11 +72,13 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public List<User> getUserList() {
+        List<User> userList = new ArrayList<>();
         try {
-            List<User> userList = new UserDao().readAll();
+             userList = userDao.readAll();
             return userList;
-        } catch (UserException e) {
-            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return userList;
     }
 }

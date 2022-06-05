@@ -16,7 +16,9 @@ public class InputFunction {
     }
 
     public static boolean checkTheCorrectnessOfTheLoginInput(String login) {
-        if (login.isEmpty()) {
+        if ("0".equals(login)) {
+            return true;
+        }else if (login.isEmpty()) {
             System.out.println("Поле 'логин' осталось пустым!");
             return false;
         } else if (login.length() < 3) {

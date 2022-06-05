@@ -6,6 +6,7 @@ import by.lev.movie.Movie;
 import by.lev.ticket.Ticket;
 import by.lev.user.Manager;
 import by.lev.user.User;
+import by.lev.user.UsersAccessLevel;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -320,6 +321,11 @@ public class AdministratorController extends ManagerController implements Admini
             String wrong = "операция прервана: пользователя с логином " + login + " в базе нет";
             System.out.println(wrong);
             writeAction(wrong);
+            showUserOperations();
+        } else if(user.getLevel().equals(UsersAccessLevel.ADMINISTRATOR)){
+            String wrong2 = "отказано в доступе: учетная запись администратора не была удалена";
+            System.out.println(wrong2);
+            writeAction(wrong2);
             showUserOperations();
         }
         usServ.removeUser(login);
