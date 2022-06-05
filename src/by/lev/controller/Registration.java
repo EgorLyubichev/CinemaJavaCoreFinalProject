@@ -28,7 +28,6 @@ public class Registration implements RegistrationInterface{
         writeRegistration(newUser);
         System.out.println("учетная запись успешно добавлена");
     }
-
     private void setCorrectLogin() {
         System.out.println("- - -| CACTUS CINEMA |- - -");
         System.out.println("- - -|  РЕГИСТРАЦИЯ  |- - -");
